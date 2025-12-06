@@ -574,6 +574,13 @@
             gap: 10px;
         }
 
+        /* TEMPLATE CARDS */
+        .template-card:hover {
+            border-color: var(--accent);
+            background: rgba(59, 130, 246, 0.05);
+            transform: translateY(-2px);
+        }
+
         /* RESPONSIVE */
         @media (max-width: 768px) {
             .main-layout {
@@ -589,6 +596,10 @@
             }
         }
     </style>
+
+    <!-- jsPDF for PDF Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
     <!-- HEADER -->
@@ -599,6 +610,8 @@
                 <a href="index.html" class="nav-btn">← Portfolio</a>
                 <button class="nav-btn" onclick="app.showDashboard()">📊 Dashboard</button>
                 <button class="nav-btn" onclick="app.showCRM()">📇 CRM</button>
+                <button class="nav-btn" onclick="app.showFollowUpView()">✉️ Follow-Ups</button>
+                <button class="nav-btn" onclick="app.showCalendarView()">📅 Calendar</button>
                 <button class="nav-btn" onclick="app.resetAll()" style="color: #ef4444;">↻ Reset</button>
             </div>
         </div>
@@ -853,6 +866,30 @@
                             </p>
                         </div>
                     </div>
+
+                    <!-- PROGRESSIVE SUMMARY -->
+                    <div class="card" style="position: sticky; top: 20px;">
+                        <h2 style="font-size: 16px; margin-bottom: 15px; color: var(--accent-light);">
+                            📋 Live Summary
+                        </h2>
+                        <div id="progressiveSummary">
+                            <p style="font-size: 13px; color: var(--text-muted);">
+                                Summary will build as you fill in the discovery form...
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- ROI SUMMARY -->
+                    <div class="card">
+                        <h2 style="font-size: 16px; margin-bottom: 15px; color: var(--accent-light);">
+                            💵 ROI Estimate
+                        </h2>
+                        <div id="roiSummary">
+                            <p style="font-size: 13px; color: var(--text-muted);">
+                                Fill in metrics to see ROI...
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -862,9 +899,10 @@
             <div class="card mb-20">
                 <h2>📄 Your Proposal</h2>
                 <div class="flex gap-10" style="margin-bottom: 20px; flex-wrap: wrap;">
-                    <button class="btn btn-primary btn-small" onclick="app.downloadProposal()">📥 Download Proposal</button>
-                    <button class="btn btn-primary btn-small" onclick="app.downloadScope()">📋 Download SOW</button>
-                    <button class="btn btn-primary btn-small" onclick="app.downloadContract()">📜 Download Contract</button>
+                    <button class="btn btn-primary btn-small" onclick="app.downloadProposalPDF()">📥 Proposal (PDF)</button>
+                    <button class="btn btn-primary btn-small" onclick="app.downloadScopePDF()">📋 SOW (PDF)</button>
+                    <button class="btn btn-primary btn-small" onclick="app.downloadContractPDF()">📜 Contract (PDF)</button>
+                    <button class="btn btn-secondary btn-small" onclick="app.downloadProposal()">Download TXT</button>
                     <button class="btn btn-secondary btn-small" onclick="app.showEmailTemplate()">✉️ Email Template</button>
                     <button class="btn btn-secondary btn-small" onclick="app.backToDiscovery()">← Back to Discovery</button>
                 </div>
@@ -960,6 +998,129 @@
             <div id="email-content" style="white-space: pre-wrap; font-family: monospace; font-size: 13px; line-height: 1.6;"></div>
             <button class="btn btn-primary" onclick="app.copyEmailToClipboard()" style="margin-top: 20px;">Copy to Clipboard</button>
         </div>
+    </div>
+
+    <!-- FOLLOW-UP EMAILS VIEW -->
+    <div id="followup-view" class="hidden">
+        <div class="container">
+            <div class="card mb-20">
+                <h2>✉️ Automated Follow-Up Emails</h2>
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
+                    Select a template based on where the prospect is in your pipeline.
+                </p>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px;">
+                    <div class="template-card" onclick="app.useFollowUpTemplate('3day')" style="background: var(--bg-light); padding: 15px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border); transition: all 0.3s;">
+                        <h4 style="color: var(--accent); margin-bottom: 8px;">📅 3-Day Follow-Up</h4>
+                        <p style="font-size: 12px; color: var(--text-muted);">After sending proposal, no response</p>
+                    </div>
+
+                    <div class="template-card" onclick="app.useFollowUpTemplate('7day')" style="background: var(--bg-light); padding: 15px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border); transition: all 0.3s;">
+                        <h4 style="color: var(--accent); margin-bottom: 8px;">⏰ 7-Day Check-In</h4>
+                        <p style="font-size: 12px; color: var(--text-muted);">Still considering, gentle reminder</p>
+                    </div>
+
+                    <div class="template-card" onclick="app.useFollowUpTemplate('interested')" style="background: var(--bg-light); padding: 15px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border); transition: all 0.3s;">
+                        <h4 style="color: var(--accent); margin-bottom: 8px;">✅ Interested - Book Call</h4>
+                        <p style="font-size: 12px; color: var(--text-muted);">They're ready, schedule next step</p>
+                    </div>
+
+                    <div class="template-card" onclick="app.useFollowUpTemplate('notready')" style="background: var(--bg-light); padding: 15px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border); transition: all 0.3s;">
+                        <h4 style="color: var(--accent); margin-bottom: 8px;">⏸️ Not Ready Yet</h4>
+                        <p style="font-size: 12px; color: var(--text-muted);">Timing isn't right, stay in touch</p>
+                    </div>
+
+                    <div class="template-card" onclick="app.useFollowUpTemplate('custom')" style="background: var(--bg-light); padding: 15px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border); transition: all 0.3s;">
+                        <h4 style="color: var(--accent); margin-bottom: 8px;">✏️ Custom</h4>
+                        <p style="font-size: 12px; color: var(--text-muted);">Write your own from scratch</p>
+                    </div>
+                </div>
+
+                <div id="followUpEditor" class="hidden">
+                    <h3 style="font-size: 16px; margin-bottom: 15px; color: var(--accent-light);">Edit Follow-Up Email</h3>
+                    <div class="form-group">
+                        <label>Subject Line</label>
+                        <input type="text" id="followUpSubject" style="width: 100%; padding: 12px; background: var(--bg-light); border: 1px solid var(--border); border-radius: 8px; color: var(--text);">
+                    </div>
+                    <div class="form-group">
+                        <label>Email Body</label>
+                        <textarea id="followUpBody" style="width: 100%; min-height: 250px; padding: 12px; background: var(--bg-light); border: 1px solid var(--border); border-radius: 8px; color: var(--text); resize: vertical;"></textarea>
+                    </div>
+                    <button class="btn btn-primary" onclick="app.copyFollowUpEmail()">
+                        📋 Copy to Clipboard
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CALENDAR VIEW -->
+    <div id="calendar-view" class="hidden">
+        <div class="container">
+            <div class="card">
+                <h2>📅 Book Follow-Up Call</h2>
+
+                <div class="tabs" style="display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 20px;">
+                    <button class="tab tab-active" id="calendly-tab-btn" onclick="app.switchCalendarTab('calendly')" style="padding: 12px 20px; background: transparent; border: none; color: var(--accent); cursor: pointer; font-size: 13px; font-weight: 600; border-bottom: 2px solid var(--accent); transition: all 0.3s;">
+                        Calendly
+                    </button>
+                    <button class="tab" id="manual-tab-btn" onclick="app.switchCalendarTab('manual')" style="padding: 12px 20px; background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 13px; font-weight: 600; border-bottom: 2px solid transparent; transition: all 0.3s;">
+                        Manual Booking
+                    </button>
+                </div>
+
+                <div id="calendly-tab-content">
+                    <div class="alert alert-info" style="padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--accent); background: rgba(59, 130, 246, 0.1); color: var(--accent);">
+                        <strong>Setup:</strong> Add your Calendly link below to enable one-click booking.
+                    </div>
+                    <div class="form-group">
+                        <label>Your Calendly Link</label>
+                        <input type="text" id="calendlyLink" placeholder="https://calendly.com/your-username/30min">
+                        <button class="btn btn-primary" style="margin-top: 10px;" onclick="app.saveCalendlyLink()">Save Link</button>
+                    </div>
+                    <div id="calendlyEmbed" style="width: 100%; height: 600px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-top: 20px;"></div>
+                </div>
+
+                <div id="manual-tab-content" class="hidden">
+                    <div class="form-group">
+                        <label>Meeting Date/Time</label>
+                        <input type="datetime-local" id="meetingDateTime">
+                    </div>
+                    <div class="form-group">
+                        <label>Duration</label>
+                        <select id="meetingDuration">
+                            <option value="15">15 minutes</option>
+                            <option value="30" selected>30 minutes</option>
+                            <option value="45">45 minutes</option>
+                            <option value="60">60 minutes</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-success" onclick="app.generateCalendarInvite()">
+                        📅 Generate .ics File
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AUTO-SAVE INDICATOR -->
+    <div id="autosaveIndicator" style="
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: var(--success);
+        color: white;
+        padding: 10px 15px;
+        border-radius: 8px;
+        display: none;
+        font-size: 13px;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        z-index: 9999;
+        align-items: center;
+        gap: 8px;
+    ">
+        <span id="autosaveText">✓ Saved</span>
     </div>
 
     <script>
@@ -1668,6 +1829,434 @@ Talk soon,
                     this.updateUI();
                     location.reload();
                 }
+            },
+
+            // AUTO-SAVE FUNCTIONALITY
+            autosaveInterval: null,
+
+            startAutosave() {
+                this.autosaveInterval = setInterval(() => {
+                    this.autoSave();
+                }, 30000); // 30 seconds
+            },
+
+            autoSave() {
+                // Save current step data
+                this.saveStepData();
+
+                // Save to localStorage
+                localStorage.setItem('discovery-data', JSON.stringify(this.data));
+                localStorage.setItem('discovery-step', this.currentStep);
+
+                // Show indicator
+                this.showAutosaveIndicator('saving');
+                setTimeout(() => {
+                    this.showAutosaveIndicator('saved');
+                }, 500);
+            },
+
+            showAutosaveIndicator(state) {
+                const indicator = document.getElementById('autosaveIndicator');
+                const text = document.getElementById('autosaveText');
+
+                if (state === 'saving') {
+                    indicator.style.background = 'var(--warning)';
+                    text.textContent = '💾 Saving...';
+                    indicator.style.display = 'flex';
+                } else if (state === 'saved') {
+                    indicator.style.background = 'var(--success)';
+                    text.textContent = '✓ Saved';
+                    indicator.style.display = 'flex';
+                    setTimeout(() => {
+                        indicator.style.display = 'none';
+                    }, 2000);
+                }
+            },
+
+            // PROGRESSIVE SUMMARY
+            updateProgressiveSummary() {
+                const summary = document.getElementById('progressiveSummary');
+                if (!summary) return;
+
+                let html = '';
+
+                // Company info
+                if (this.data.company.companyName) {
+                    html += `
+                        <div style="margin-bottom: 12px; padding: 12px; background: rgba(59, 130, 246, 0.1); border-left: 3px solid var(--accent); border-radius: 4px;">
+                            <strong style="display: block; color: var(--accent); font-size: 11px; margin-bottom: 4px; text-transform: uppercase;">Company</strong>
+                            <div style="font-size: 13px;">${this.data.company.companyName}</div>
+                            <div style="font-size: 11px; color: var(--text-muted);">${this.data.company.industry || 'Industry not specified'}</div>
+                        </div>
+                    `;
+                }
+
+                // Pain points
+                if (this.data.pain.currentState) {
+                    html += `
+                        <div style="margin-bottom: 12px; padding: 12px; background: rgba(245, 158, 11, 0.1); border-left: 3px solid var(--warning); border-radius: 4px;">
+                            <strong style="display: block; color: var(--warning); font-size: 11px; margin-bottom: 4px; text-transform: uppercase;">Current Pain</strong>
+                            <div style="font-size: 13px;">${this.data.pain.currentState.substring(0, 100)}${this.data.pain.currentState.length > 100 ? '...' : ''}</div>
+                        </div>
+                    `;
+                }
+
+                // Tools
+                if (this.data.tools && this.data.tools.length > 0) {
+                    html += `
+                        <div style="margin-bottom: 12px; padding: 12px; background: rgba(59, 130, 246, 0.1); border-left: 3px solid var(--accent); border-radius: 4px;">
+                            <strong style="display: block; color: var(--accent); font-size: 11px; margin-bottom: 4px; text-transform: uppercase;">Tech Stack</strong>
+                            <div style="font-size: 13px;">${this.data.tools.slice(0, 3).join(', ')}${this.data.tools.length > 3 ? '...' : ''}</div>
+                        </div>
+                    `;
+                }
+
+                // Metrics
+                if (this.data.metrics.teamSize) {
+                    html += `
+                        <div style="margin-bottom: 12px; padding: 12px; background: rgba(16, 185, 129, 0.1); border-left: 3px solid var(--success); border-radius: 4px;">
+                            <strong style="display: block; color: var(--success); font-size: 11px; margin-bottom: 4px; text-transform: uppercase;">Impact</strong>
+                            <div style="font-size: 13px;">${this.data.metrics.teamSize} people · ${this.data.metrics.hoursPerWeek || 0} hrs/week</div>
+                        </div>
+                    `;
+                }
+
+                summary.innerHTML = html || '<p style="font-size: 13px; color: var(--text-muted);">Summary will build as you fill in the form...</p>';
+
+                // Update ROI if metrics exist
+                this.updateROISummary();
+            },
+
+            updateROISummary() {
+                const roiDiv = document.getElementById('roiSummary');
+                if (!roiDiv) return;
+
+                if (this.data.metrics.hoursPerWeek && this.data.metrics.teamSize) {
+                    const roi = this.calculateROI();
+                    roiDiv.innerHTML = `
+                        <div style="padding: 15px; background: rgba(16, 185, 129, 0.1); border-radius: 6px;">
+                            <div style="font-size: 24px; font-weight: 700; color: var(--success); margin-bottom: 5px;">
+                                $${roi.totalMonthlyImpact.toLocaleString()}<span style="font-size: 14px;">/mo</span>
+                            </div>
+                            <div style="font-size: 11px; color: var(--text-muted);">
+                                Annual: $${roi.annualSavings.toLocaleString()}<br>
+                                Payback: ${roi.paybackWeeks.toFixed(1)} weeks
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    roiDiv.innerHTML = '<p style="font-size: 13px; color: var(--text-muted);">Fill in metrics to see ROI...</p>';
+                }
+            },
+
+            // PDF GENERATION
+            async downloadProposalPDF() {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+
+                // Title Page
+                doc.setFontSize(28);
+                doc.setTextColor(59, 130, 246);
+                doc.text('Proposal', 20, 30);
+
+                doc.setFontSize(18);
+                doc.setTextColor(30, 41, 59);
+                doc.text(this.data.company.companyName || 'Client Company', 20, 45);
+
+                doc.setFontSize(12);
+                doc.setTextColor(148, 163, 184);
+                doc.text('Prepared: ' + new Date().toLocaleDateString(), 20, 55);
+                doc.text('AI Automation Consultant', 20, 62);
+
+                // Executive Summary
+                let y = 80;
+                doc.setFontSize(16);
+                doc.setTextColor(59, 130, 246);
+                doc.text('Executive Summary', 20, y);
+
+                y += 10;
+                doc.setFontSize(11);
+                doc.setTextColor(30, 41, 59);
+                doc.text(`Company: ${this.data.company.companyName}`, 20, y);
+                y += 7;
+                doc.text(`Industry: ${this.data.company.industry}`, 20, y);
+                y += 7;
+                doc.text(`Team Size: ${this.data.metrics.teamSize || 'N/A'} people`, 20, y);
+
+                // Current Situation
+                y += 15;
+                doc.setFontSize(14);
+                doc.setTextColor(59, 130, 246);
+                doc.text('Current Situation', 20, y);
+
+                y += 8;
+                doc.setFontSize(10);
+                doc.setTextColor(30, 41, 59);
+                const currentState = doc.splitTextToSize(this.data.pain.currentState || 'Not documented', 170);
+                doc.text(currentState, 20, y);
+                y += currentState.length * 5 + 5;
+
+                // Core Problem
+                if (this.data.pain.rootCause) {
+                    doc.setFontSize(14);
+                    doc.setTextColor(59, 130, 246);
+                    doc.text('Core Problem', 20, y);
+                    y += 8;
+                    doc.setFontSize(10);
+                    doc.setTextColor(30, 41, 59);
+                    const rootCause = doc.splitTextToSize(this.data.pain.rootCause, 170);
+                    doc.text(rootCause, 20, y);
+                    y += rootCause.length * 5 + 5;
+                }
+
+                // Expected Impact
+                y += 10;
+                doc.setFontSize(14);
+                doc.setTextColor(16, 185, 129);
+                doc.text('Expected Impact', 20, y);
+
+                y += 8;
+                doc.setFontSize(10);
+                doc.setTextColor(30, 41, 59);
+                const roi = this.calculateROI();
+                doc.text(`Monthly Savings: $${roi.totalMonthlyImpact.toLocaleString()}`, 20, y);
+                y += 6;
+                doc.text(`Annual Impact: $${roi.annualSavings.toLocaleString()}`, 20, y);
+                y += 6;
+                doc.text(`Payback Period: ${roi.paybackWeeks.toFixed(1)} weeks`, 20, y);
+
+                // Investment
+                y += 15;
+                doc.setFontSize(14);
+                doc.setTextColor(59, 130, 246);
+                doc.text('Investment & Timeline', 20, y);
+
+                y += 8;
+                doc.setFontSize(10);
+                doc.setTextColor(30, 41, 59);
+                doc.text(`Quick Win: $${roi.investmentRange.min.toLocaleString()} - $${(roi.investmentRange.min * 2).toLocaleString()} (2-4 weeks)`, 20, y);
+                y += 6;
+                doc.text(`Full Project: $${roi.investmentRange.min.toLocaleString()} - $${roi.investmentRange.max.toLocaleString()} (8-12 weeks)`, 20, y);
+
+                // Next Steps
+                y += 15;
+                doc.setFontSize(14);
+                doc.setTextColor(59, 130, 246);
+                doc.text('Next Steps', 20, y);
+
+                y += 8;
+                doc.setFontSize(10);
+                doc.setTextColor(30, 41, 59);
+                doc.text('1. Review this proposal', 20, y);
+                y += 6;
+                doc.text('2. Schedule 30-minute tech scoping call', 20, y);
+                y += 6;
+                doc.text('3. Confirm scope and timeline', 20, y);
+                y += 6;
+                doc.text('4. Begin implementation', 20, y);
+
+                // Footer
+                doc.setFontSize(8);
+                doc.setTextColor(148, 163, 184);
+                doc.text('© ' + new Date().getFullYear() + ' | AI Automation Consultant', 20, 285);
+
+                // Save
+                doc.save(`Proposal-${this.data.company.companyName}-${new Date().toLocaleDateString()}.pdf`);
+            },
+
+            async downloadScopePDF() {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+
+                doc.setFontSize(24);
+                doc.setTextColor(59, 130, 246);
+                doc.text('Scope of Work', 20, 30);
+
+                doc.setFontSize(14);
+                doc.setTextColor(30, 41, 59);
+                doc.text(this.data.company.companyName || 'Client Company', 20, 45);
+
+                let y = 60;
+                doc.setFontSize(12);
+                doc.text('Project Phases', 20, y);
+
+                y += 10;
+                doc.setFontSize(10);
+                doc.text('Phase 1: Discovery & Planning (Weeks 1-2)', 20, y);
+                y += 10;
+                doc.text('Phase 2: Quick Wins Implementation (Weeks 3-4)', 20, y);
+                y += 10;
+                doc.text('Phase 3: Full Automation Rollout (Weeks 5-10)', 20, y);
+                y += 10;
+                doc.text('Phase 4: Training & Handoff (Weeks 11-12)', 20, y);
+
+                doc.save(`SOW-${this.data.company.companyName}-${new Date().toLocaleDateString()}.pdf`);
+            },
+
+            async downloadContractPDF() {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+
+                doc.setFontSize(24);
+                doc.setTextColor(59, 130, 246);
+                doc.text('Service Agreement', 20, 30);
+
+                doc.setFontSize(12);
+                doc.setTextColor(30, 41, 59);
+                doc.text(`Client: ${this.data.company.companyName}`, 20, 50);
+                doc.text(`Contractor: [Your Company Name]`, 20, 58);
+                doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 66);
+
+                doc.save(`Contract-${this.data.company.companyName}-${new Date().toLocaleDateString()}.pdf`);
+            },
+
+            // FOLLOW-UP EMAIL TEMPLATES
+            followUpTemplates: {
+                '3day': {
+                    subject: 'Following up on our call - {company}',
+                    body: `Hi {prospect},\n\nHope you're well! I wanted to follow up on the proposal I sent 3 days ago.\n\nQuick recap:\n- Current challenge: {pain}\n- Estimated monthly impact: ${this.data.metrics.teamSize ? '$' + this.calculateROI().totalMonthlyImpact.toLocaleString() : '[ROI]'}/month\n- Timeline: 8-12 weeks\n\nAny questions? Happy to jump on a quick call.\n\nBest,\n[Your Name]`
+                },
+                '7day': {
+                    subject: 'Checking in - {company}',
+                    body: `Hi {prospect},\n\nJust checking in! I know you're busy evaluating options.\n\nIs there anything I can clarify about the proposal?\n\nBest,\n[Your Name]`
+                },
+                'interested': {
+                    subject: `Let's schedule your tech scoping call - {company}`,
+                    body: `Hi {prospect},\n\nGreat to hear you're interested! Let's schedule a 30-minute tech scoping call.\n\nHere's my calendar: [YOUR CALENDLY LINK]\n\nLooking forward to it!\n\nBest,\n[Your Name]`
+                },
+                'notready': {
+                    subject: 'Staying in touch - {company}',
+                    body: `Hi {prospect},\n\nThanks for letting me know the timing isn't right yet. I completely understand.\n\nI'll check back in 3 months. In the meantime, feel free to reach out if anything changes.\n\nBest,\n[Your Name]`
+                },
+                'custom': {
+                    subject: '',
+                    body: ''
+                }
+            },
+
+            useFollowUpTemplate(type) {
+                const template = this.followUpTemplates[type];
+                const roi = this.calculateROI();
+
+                // Replace placeholders
+                let subject = template.subject
+                    .replace('{company}', this.data.company.companyName || '[Company Name]')
+                    .replace('{prospect}', this.data.company.prospectName || '[Prospect Name]');
+
+                let body = template.body
+                    .replace('{company}', this.data.company.companyName || '[Company Name]')
+                    .replace('{prospect}', this.data.company.prospectName || '[Prospect Name]')
+                    .replace('{pain}', (this.data.pain.currentState || 'Your challenge').substring(0, 100));
+
+                document.getElementById('followUpSubject').value = subject;
+                document.getElementById('followUpBody').value = body;
+                document.getElementById('followUpEditor').classList.remove('hidden');
+
+                // Scroll to editor
+                document.getElementById('followUpEditor').scrollIntoView({ behavior: 'smooth' });
+            },
+
+            copyFollowUpEmail() {
+                const subject = document.getElementById('followUpSubject').value;
+                const body = document.getElementById('followUpBody').value;
+                const fullEmail = `Subject: ${subject}\n\n${body}`;
+
+                navigator.clipboard.writeText(fullEmail).then(() => {
+                    alert('✅ Email copied to clipboard!');
+                });
+            },
+
+            showFollowUpView() {
+                document.getElementById('discovery-flow').classList.add('hidden');
+                document.getElementById('results-view').classList.add('hidden');
+                document.getElementById('dashboard-view').classList.add('hidden');
+                document.getElementById('crm-view').classList.add('hidden');
+                document.getElementById('calendar-view').classList.add('hidden');
+                document.getElementById('followup-view').classList.remove('hidden');
+            },
+
+            // CALENDAR INTEGRATION
+            saveCalendlyLink() {
+                const link = document.getElementById('calendlyLink').value;
+                localStorage.setItem('calendly-link', link);
+                this.loadCalendlyEmbed(link);
+                alert('✅ Calendly link saved!');
+            },
+
+            loadCalendlyEmbed(link) {
+                if (!link) {
+                    link = localStorage.getItem('calendly-link');
+                }
+                if (link) {
+                    document.getElementById('calendlyEmbed').innerHTML =
+                        `<iframe src="${link}" width="100%" height="600" frameborder="0"></iframe>`;
+                }
+            },
+
+            switchCalendarTab(tab) {
+                const calendlyBtn = document.getElementById('calendly-tab-btn');
+                const manualBtn = document.getElementById('manual-tab-btn');
+                const calendlyContent = document.getElementById('calendly-tab-content');
+                const manualContent = document.getElementById('manual-tab-content');
+
+                if (tab === 'calendly') {
+                    calendlyBtn.style.borderBottomColor = 'var(--accent)';
+                    calendlyBtn.style.color = 'var(--accent)';
+                    manualBtn.style.borderBottomColor = 'transparent';
+                    manualBtn.style.color = 'var(--text-muted)';
+                    calendlyContent.classList.remove('hidden');
+                    manualContent.classList.add('hidden');
+                    this.loadCalendlyEmbed();
+                } else {
+                    manualBtn.style.borderBottomColor = 'var(--accent)';
+                    manualBtn.style.color = 'var(--accent)';
+                    calendlyBtn.style.borderBottomColor = 'transparent';
+                    calendlyBtn.style.color = 'var(--text-muted)';
+                    manualContent.classList.remove('hidden');
+                    calendlyContent.classList.add('hidden');
+                }
+            },
+
+            generateCalendarInvite() {
+                const datetime = document.getElementById('meetingDateTime').value;
+                const duration = document.getElementById('meetingDuration').value;
+
+                if (!datetime) {
+                    alert('Please select a date and time');
+                    return;
+                }
+
+                const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Discovery Pro//Calendar//EN
+BEGIN:VEVENT
+UID:${Date.now()}@discoverypro.com
+DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+DTSTART:${datetime.replace(/[-:]/g, '')}00
+DURATION:PT${duration}M
+SUMMARY:Tech Scoping Call - ${this.data.company.companyName}
+DESCRIPTION:Follow-up call to discuss AI automation project details
+END:VEVENT
+END:VCALENDAR`;
+
+                const blob = new Blob([icsContent], { type: 'text/calendar' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `meeting-${this.data.company.companyName}-${new Date().toLocaleDateString()}.ics`;
+                a.click();
+                URL.revokeObjectURL(url);
+
+                alert('✅ Calendar invite generated!');
+            },
+
+            showCalendarView() {
+                document.getElementById('discovery-flow').classList.add('hidden');
+                document.getElementById('results-view').classList.add('hidden');
+                document.getElementById('dashboard-view').classList.add('hidden');
+                document.getElementById('crm-view').classList.add('hidden');
+                document.getElementById('followup-view').classList.add('hidden');
+                document.getElementById('calendar-view').classList.remove('hidden');
             }
         };
 
@@ -1675,13 +2264,20 @@ Talk soon,
         window.addEventListener('load', () => {
             app.loadCRM();
             app.updateUI();
+            app.startAutosave(); // Start auto-save
+            app.updateProgressiveSummary(); // Initial summary update
         });
 
-        // AUTO-UPDATE ROI
+        // AUTO-UPDATE ROI AND PROGRESSIVE SUMMARY
         document.addEventListener('input', (e) => {
             if (app.currentStep === 4) {
                 app.updateROI();
             }
+            app.updateProgressiveSummary(); // Update summary on any input
+        });
+
+        document.addEventListener('change', (e) => {
+            app.updateProgressiveSummary(); // Update summary on any change
         });
     </script>
 </body>

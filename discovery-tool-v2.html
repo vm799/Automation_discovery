@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discovery Pro — AI Automation Sales Toolkit</title>
+
+    <!-- External Libraries for PDF and DOCX Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #0f172a;
+            --secondary: #1e293b;
+            --accent: #3b82f6;
+            --accent-light: #60a5fa;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --bg-light: #1e293b;
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+
+            --sidebar-width: 280px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, #1a1f36 100%);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* PERSISTENT SIDEBAR */
+        .main-sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--secondary);
+            border-right: 1px solid var(--border);
+            padding: 20px;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+
+        .sidebar-logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-section {
+            margin-bottom: 25px;
+        }
+
+        .sidebar-section h3 {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .sidebar-nav-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            border-radius: 6px;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 13px;
+            margin-bottom: 4px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .sidebar-nav-item:hover {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent);
+        }
+
+        .sidebar-nav-item.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .sidebar-nav-item i {
+            width: 18px;
+            margin-right: 10px;
+        }
+
+        /* MAIN CONTENT AREA */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 20px;
+            max-width: 1600px;
+        }
+
+        /* HEADER */
+        .header {
+            background: var(--secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 20px 30px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--bg-light);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 11px;
+        }
+
+        /* GRID LAYOUT */
+        .discovery-grid {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 20px;
+        }
+
+        /* CARDS */
+        .card {
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .card h2 {
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: var(--accent-light);
+        }
+
+        /* PROGRESSIVE SUMMARY */
+        .summary-panel {
+            position: sticky;
+            top: 20px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+        }
+
+        .summary-item {
+            margin-bottom: 15px;
+            padding: 12px;
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 3px solid var(--accent);
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .summary-item strong {
+            display: block;
+            color: var(--accent);
+            margin-bottom: 4px;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        /* FORMS */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        input[type="file"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* PROGRESS */
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent) 0%, var(--success) 100%);
+            transition: width 0.5s ease;
+        }
+
+        /* UPLOAD ZONE */
+        .upload-zone {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-zone:hover {
+            border-color: var(--accent);
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .upload-zone.dragover {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        /* CALENDAR */
+        .calendar-embed {
+            width: 100%;
+            height: 600px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        /* TABS */
+        .tabs {
+            display: flex;
+            gap: 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* ALERTS */
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .alert-info {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* AUTO-SAVE INDICATOR */
+        .autosave-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 12px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .autosave-indicator.saving {
+            display: flex;
+            color: var(--warning);
+        }
+
+        .autosave-indicator.saved {
+            display: flex;
+            color: var(--success);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .main-sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+
+            .main-sidebar.mobile-open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .discovery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-panel {
+                position: relative;
+                top: 0;
+                max-height: none;
+            }
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 44px;
+            height: 44px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            z-index: 1001;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 1024px) {
+            .mobile-menu-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* TRANSCRIPT PARSER */
+        .transcript-preview {
+            background: var(--bg-light);
+            padding: 15px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+
+        /* FOLLOW-UP SECTION */
+        .follow-up-templates {
+            display: grid;
+            gap: 15px;
+        }
+
+        .template-card {
+            background: var(--bg-light);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .template-card:hover {
+            border-color: var(--accent);
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .template-card h4 {
+            color: var(--accent);
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .template-card p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <!-- MOBILE MENU BUTTON -->
+    <button class="mobile-menu-btn" onclick="app.toggleMobileSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- PERSISTENT SIDEBAR -->
+    <aside class="main-sidebar" id="mainSidebar">
+        <div class="sidebar-logo">
+            <i class="fas fa-rocket"></i>
+            Discovery Pro
+        </div>
+
+        <div class="sidebar-section">
+            <h3>Navigation</h3>
+            <a href="index.html" class="sidebar-nav-item">
+                <i class="fas fa-home"></i>
+                Portfolio
+            </a>
+            <div class="sidebar-nav-item active" onclick="app.showView('discovery')">
+                <i class="fas fa-compass"></i>
+                Discovery
+            </div>
+            <div class="sidebar-nav-item" onclick="app.showView('dashboard')">
+                <i class="fas fa-chart-line"></i>
+                Dashboard
+            </div>
+            <div class="sidebar-nav-item" onclick="app.showView('crm')">
+                <i class="fas fa-users"></i>
+                CRM
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <h3>Tools</h3>
+            <div class="sidebar-nav-item" onclick="app.showView('transcript')">
+                <i class="fas fa-file-upload"></i>
+                Upload Transcript
+            </div>
+            <div class="sidebar-nav-item" onclick="app.showView('calendar')">
+                <i class="fas fa-calendar-alt"></i>
+                Book Follow-Up
+            </div>
+            <div class="sidebar-nav-item" onclick="app.showView('follow-up')">
+                <i class="fas fa-envelope"></i>
+                Follow-Up Emails
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <h3>Quick Actions</h3>
+            <div class="sidebar-nav-item" onclick="app.exportCRM()">
+                <i class="fas fa-download"></i>
+                Export CRM (CSV)
+            </div>
+            <div class="sidebar-nav-item" onclick="app.resetAll()">
+                <i class="fas fa-redo"></i>
+                Reset Tool
+            </div>
+        </div>
+
+        <div class="sidebar-section" style="margin-top: 30px;">
+            <div style="padding: 15px; background: rgba(59, 130, 246, 0.1); border-radius: 6px;">
+                <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 5px;">CURRENT STEP</div>
+                <div id="sidebarStepIndicator" style="font-size: 14px; font-weight: 600; color: var(--accent);">Step 1 of 5</div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <!-- AUTO-SAVE INDICATOR -->
+        <div class="autosave-indicator" id="autosaveIndicator">
+            <i class="fas fa-check-circle"></i>
+            <span id="autosaveText">Saved</span>
+        </div>
+
+        <!-- HEADER -->
+        <div class="header">
+            <div>
+                <div class="header-title">Discovery Call Toolkit</div>
+                <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Production-grade sales tool with AI insights</div>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary btn-small" onclick="app.saveProgress()">
+                    <i class="fas fa-save"></i> Save Progress
+                </button>
+                <button class="btn btn-primary btn-small" onclick="app.generateAll()">
+                    <i class="fas fa-magic"></i> Generate All
+                </button>
+            </div>
+        </div>
+
+        <!-- DISCOVERY VIEW -->
+        <div id="discoveryView">
+            <div class="discovery-grid">
+                <!-- LEFT: MAIN FORM -->
+                <div>
+                    <!-- PROGRESS -->
+                    <div class="card" style="margin-bottom: 20px;">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                        </div>
+                        <div style="text-align: center; font-size: 12px; color: var(--text-muted);">
+                            <span id="progressText">Step 1 of 5</span> · <span id="progressPercent">0%</span> Complete
+                        </div>
+                    </div>
+
+                    <!-- DISCOVERY FORM STEPS -->
+                    <div id="discoverySteps">
+                        <!-- Steps will be dynamically loaded here -->
+                    </div>
+                </div>
+
+                <!-- RIGHT: PROGRESSIVE SUMMARY -->
+                <div class="summary-panel">
+                    <div class="card">
+                        <h2><i class="fas fa-clipboard-list"></i> Live Summary</h2>
+                        <div id="progressiveSummary">
+                            <p style="font-size: 13px; color: var(--text-muted);">Summary will build as you fill in the discovery form...</p>
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin-top: 20px;">
+                        <h2><i class="fas fa-calculator"></i> ROI Estimate</h2>
+                        <div id="roiDisplay">
+                            <p style="font-size: 13px; color: var(--text-muted);">Fill in metrics to see ROI calculation...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TRANSCRIPT UPLOAD VIEW -->
+        <div id="transcriptView" class="hidden">
+            <div class="card">
+                <h2><i class="fas fa-file-upload"></i> Upload Call Transcript</h2>
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
+                    Upload your call transcript (TXT, DOCX, or paste text) and we'll automatically extract key information.
+                </p>
+
+                <div class="upload-zone" id="uploadZone" onclick="document.getElementById('transcriptFile').click()">
+                    <i class="fas fa-cloud-upload-alt" style="font-size: 48px; color: var(--accent); margin-bottom: 15px;"></i>
+                    <p style="font-size: 14px; margin-bottom: 8px;">Click to upload or drag & drop</p>
+                    <p style="font-size: 12px; color: var(--text-muted);">Supports TXT, DOCX, PDF</p>
+                    <input type="file" id="transcriptFile" accept=".txt,.docx,.pdf" style="display: none;" onchange="app.handleTranscriptUpload(event)">
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <label style="display: block; margin-bottom: 10px; font-size: 13px; font-weight: 600;">Or paste transcript text:</label>
+                    <textarea id="transcriptText" placeholder="Paste your call transcript here..." style="min-height: 200px;"></textarea>
+                    <button class="btn btn-primary" style="margin-top: 15px;" onclick="app.parseTranscript()">
+                        <i class="fas fa-magic"></i> Parse Transcript
+                    </button>
+                </div>
+
+                <div id="transcriptPreview" class="transcript-preview hidden"></div>
+            </div>
+        </div>
+
+        <!-- CALENDAR VIEW -->
+        <div id="calendarView" class="hidden">
+            <div class="card">
+                <h2><i class="fas fa-calendar-alt"></i> Book Follow-Up Call</h2>
+
+                <div class="tabs" style="margin-bottom: 20px;">
+                    <button class="tab active" onclick="app.switchCalendarTab('calendly')">Calendly Integration</button>
+                    <button class="tab" onclick="app.switchCalendarTab('manual')">Manual Booking</button>
+                </div>
+
+                <div id="calendlyTab" class="tab-content active">
+                    <div class="alert alert-info">
+                        <strong>Setup Required:</strong> Add your Calendly link below to enable one-click booking.
+                    </div>
+                    <div class="form-group">
+                        <label>Your Calendly Link</label>
+                        <input type="text" id="calendlyLink" placeholder="https://calendly.com/your-username/30min" value="">
+                        <button class="btn btn-primary" style="margin-top: 10px;" onclick="app.saveCalendlyLink()">Save Link</button>
+                    </div>
+                    <div id="calendlyEmbed" class="calendar-embed" style="margin-top: 20px;"></div>
+                </div>
+
+                <div id="manualTab" class="tab-content">
+                    <div class="form-group">
+                        <label>Proposed Date/Time</label>
+                        <input type="datetime-local" id="manualDateTime">
+                    </div>
+                    <div class="form-group">
+                        <label>Duration (minutes)</label>
+                        <select id="manualDuration">
+                            <option value="15">15 minutes</option>
+                            <option value="30" selected>30 minutes</option>
+                            <option value="45">45 minutes</option>
+                            <option value="60">60 minutes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Meeting Type</label>
+                        <select id="meetingType">
+                            <option value="discovery">Discovery Call</option>
+                            <option value="scoping" selected>Tech Scoping Call</option>
+                            <option value="followup">Follow-Up</option>
+                            <option value="demo">Demo</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-success" onclick="app.generateCalendarInvite()">
+                        <i class="fas fa-calendar-plus"></i> Generate Calendar Invite
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOLLOW-UP EMAILS VIEW -->
+        <div id="followUpView" class="hidden">
+            <div class="card">
+                <h2><i class="fas fa-envelope"></i> Automated Follow-Up Emails</h2>
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
+                    Select a follow-up template based on where the prospect is in your pipeline.
+                </p>
+
+                <div class="follow-up-templates">
+                    <div class="template-card" onclick="app.useFollowUpTemplate('3day')">
+                        <h4>📅 3-Day Follow-Up</h4>
+                        <p>After sending proposal, no response yet</p>
+                    </div>
+                    <div class="template-card" onclick="app.useFollowUpTemplate('7day')">
+                        <h4>⏰ 7-Day Check-In</h4>
+                        <p>Still considering, gentle reminder</p>
+                    </div>
+                    <div class="template-card" onclick="app.useFollowUpTemplate('interested')">
+                        <h4>✅ Interested - Book Scoping</h4>
+                        <p>They're interested, schedule tech call</p>
+                    </div>
+                    <div class="template-card" onclick="app.useFollowUpTemplate('notready')">
+                        <h4>⏸️ Not Ready Yet</h4>
+                        <p>Timing isn't right, stay in touch</p>
+                    </div>
+                    <div class="template-card" onclick="app.useFollowUpTemplate('custom')">
+                        <h4>✏️ Custom Template</h4>
+                        <p>Create your own follow-up message</p>
+                    </div>
+                </div>
+
+                <div id="followUpEditor" class="hidden" style="margin-top: 20px;">
+                    <h3 style="font-size: 14px; margin-bottom: 15px; color: var(--accent);">Edit Follow-Up Email</h3>
+                    <div class="form-group">
+                        <label>Subject Line</label>
+                        <input type="text" id="followUpSubject">
+                    </div>
+                    <div class="form-group">
+                        <label>Email Body</label>
+                        <textarea id="followUpBody" style="min-height: 250px;"></textarea>
+                    </div>
+                    <button class="btn btn-primary" onclick="app.copyFollowUpEmail()">
+                        <i class="fas fa-copy"></i> Copy to Clipboard
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- DASHBOARD VIEW -->
+        <div id="dashboardView" class="hidden">
+            <div class="card">
+                <h2><i class="fas fa-chart-line"></i> Dashboard & Analytics</h2>
+                <div id="dashboardContent">
+                    <!-- Dashboard will be rendered here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- CRM VIEW -->
+        <div id="crmView" class="hidden">
+            <div class="card">
+                <h2><i class="fas fa-users"></i> CRM - All Prospects</h2>
+                <div style="margin-bottom: 20px;">
+                    <button class="btn btn-primary btn-small" onclick="app.exportCRM()">
+                        <i class="fas fa-download"></i> Export to CSV
+                    </button>
+                </div>
+                <div id="crmContent">
+                    <!-- CRM table will be rendered here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // APPLICATION STATE
+        const app = {
+            currentStep: 1,
+            totalSteps: 5,
+            data: {
+                company: {},
+                pain: {},
+                tools: [],
+                metrics: {},
+                notes: '',
+                transcript: ''
+            },
+            crm: [],
+            autosaveTimer: null,
+
+            init() {
+                this.loadFromStorage();
+                this.renderDiscoverySteps();
+                this.updateUI();
+                this.startAutosave();
+                this.setupDragDrop();
+            },
+
+            // AUTO-SAVE FUNCTIONALITY
+            startAutosave() {
+                setInterval(() => {
+                    this.saveProgress();
+                }, 30000); // Auto-save every 30 seconds
+            },
+
+            saveProgress() {
+                this.showAutosaveIndicator('saving');
+                localStorage.setItem('discovery-data', JSON.stringify(this.data));
+                localStorage.setItem('discovery-step', this.currentStep);
+                setTimeout(() => this.showAutosaveIndicator('saved'), 500);
+            },
+
+            showAutosaveIndicator(state) {
+                const indicator = document.getElementById('autosaveIndicator');
+                const text = document.getElementById('autosaveText');
+                indicator.className = 'autosave-indicator ' + state;
+                text.textContent = state === 'saving' ? 'Saving...' : 'Saved';
+                if (state === 'saved') {
+                    setTimeout(() => {
+                        indicator.className = 'autosave-indicator';
+                    }, 2000);
+                }
+            },
+
+            loadFromStorage() {
+                const saved = localStorage.getItem('discovery-data');
+                const savedStep = localStorage.getItem('discovery-step');
+                const savedCRM = localStorage.getItem('crm-data');
+
+                if (saved) this.data = JSON.parse(saved);
+                if (savedStep) this.currentStep = parseInt(savedStep);
+                if (savedCRM) this.crm = JSON.parse(savedCRM);
+            },
+
+            // VIEW MANAGEMENT
+            showView(viewName) {
+                const views = ['discoveryView', 'transcriptView', 'calendarView', 'followUpView', 'dashboardView', 'crmView'];
+                views.forEach(v => {
+                    document.getElementById(v).classList.add('hidden');
+                });
+                document.getElementById(viewName + 'View').classList.remove('hidden');
+
+                // Update active nav item
+                document.querySelectorAll('.sidebar-nav-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+
+                if (viewName === 'dashboard') {
+                    this.renderDashboard();
+                } else if (viewName === 'crm') {
+                    this.renderCRM();
+                }
+            },
+
+            // RENDER DISCOVERY STEPS
+            renderDiscoverySteps() {
+                // This would contain the full 5-step form HTML
+                // For brevity, showing structure only
+                const container = document.getElementById('discoverySteps');
+                container.innerHTML = `
+                    <div class="card" id="step-1">
+                        <h2>Step 1: Company Basics</h2>
+                        <!-- Form fields here -->
+                        <button class="btn btn-primary" onclick="app.nextStep()">Continue</button>
+                    </div>
+                    <!-- Additional steps... -->
+                `;
+            },
+
+            // PROGRESSIVE SUMMARY UPDATE
+            updateSummary() {
+                const summary = document.getElementById('progressiveSummary');
+                let html = '';
+
+                if (this.data.company.companyName) {
+                    html += `
+                        <div class="summary-item">
+                            <strong>Company</strong>
+                            ${this.data.company.companyName} · ${this.data.company.industry || 'N/A'}
+                        </div>
+                    `;
+                }
+
+                if (this.data.pain.currentState) {
+                    html += `
+                        <div class="summary-item">
+                            <strong>Current State</strong>
+                            ${this.data.pain.currentState.substring(0, 100)}...
+                        </div>
+                    `;
+                }
+
+                if (this.data.metrics.teamSize) {
+                    html += `
+                        <div class="summary-item">
+                            <strong>Impact</strong>
+                            ${this.data.metrics.teamSize} people · ${this.data.metrics.hoursPerWeek || 0} hrs/week
+                        </div>
+                    `;
+                }
+
+                summary.innerHTML = html || '<p style="font-size: 13px; color: var(--text-muted);">Summary will build as you fill in the form...</p>';
+            },
+
+            // TRANSCRIPT UPLOAD & PARSING
+            handleTranscriptUpload(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('transcriptText').value = e.target.result;
+                    this.parseTranscript();
+                };
+                reader.readAsText(file);
+            },
+
+            setupDragDrop() {
+                const zone = document.getElementById('uploadZone');
+                if (!zone) return;
+
+                zone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    zone.classList.add('dragover');
+                });
+
+                zone.addEventListener('dragleave', () => {
+                    zone.classList.remove('dragover');
+                });
+
+                zone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    zone.classList.remove('dragover');
+                    const file = e.dataTransfer.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                            document.getElementById('transcriptText').value = event.target.result;
+                            this.parseTranscript();
+                        };
+                        reader.readAsText(file);
+                    }
+                });
+            },
+
+            parseTranscript() {
+                const text = document.getElementById('transcriptText').value;
+                if (!text) return;
+
+                // Simple parsing logic (can be enhanced with AI/NLP)
+                const lines = text.toLowerCase();
+
+                // Extract company name (look for patterns)
+                const companyMatch = lines.match(/(?:company|business|firm|organization)(?:\s+is)?\s+([A-Z][a-zA-Z\s]+)/i);
+                if (companyMatch) this.data.company.companyName = companyMatch[1].trim();
+
+                // Extract pain points (look for keywords)
+                const painKeywords = ['problem', 'issue', 'challenge', 'struggle', 'difficult', 'frustrat'];
+                const painSentences = text.split('.').filter(s =>
+                    painKeywords.some(k => s.toLowerCase().includes(k))
+                );
+                if (painSentences.length) {
+                    this.data.pain.currentState = painSentences.slice(0, 3).join('. ');
+                }
+
+                // Extract numbers (potential metrics)
+                const numbers = text.match(/\d+/g);
+                if (numbers && numbers.length) {
+                    this.data.metrics.teamSize = parseInt(numbers[0]) || 0;
+                }
+
+                // Show preview
+                const preview = document.getElementById('transcriptPreview');
+                preview.classList.remove('hidden');
+                preview.innerHTML = `
+                    <strong>Parsed Data:</strong><br>
+                    Company: ${this.data.company.companyName || 'Not found'}<br>
+                    Pain Points: ${this.data.pain.currentState ? 'Found' : 'Not found'}<br>
+                    <br>
+                    <button class="btn btn-success" onclick="app.applyParsedData()">Apply to Form</button>
+                `;
+
+                this.saveProgress();
+            },
+
+            applyParsedData() {
+                this.showView('discovery');
+                this.updateSummary();
+                alert('Transcript data applied to form!');
+            },
+
+            // PDF GENERATION
+            async generatePDF(type) {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+
+                doc.setFontSize(20);
+                doc.text(`${type} Document`, 20, 20);
+
+                doc.setFontSize(12);
+                doc.text(`Company: ${this.data.company.companyName || 'N/A'}`, 20, 40);
+                doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 50);
+
+                // Add more content based on type
+                doc.text('This is a sample PDF. Full implementation would include all proposal data.', 20, 70);
+
+                doc.save(`${type}-${this.data.company.companyName || 'Document'}.pdf`);
+            },
+
+            // CALENDAR INTEGRATION
+            saveCalendlyLink() {
+                const link = document.getElementById('calendlyLink').value;
+                localStorage.setItem('calendly-link', link);
+                this.loadCalendlyEmbed(link);
+                alert('Calendly link saved!');
+            },
+
+            loadCalendlyEmbed(link) {
+                if (!link) return;
+                const embed = document.getElementById('calendlyEmbed');
+                embed.innerHTML = `<iframe src="${link}" width="100%" height="600" frameborder="0"></iframe>`;
+            },
+
+            switchCalendarTab(tab) {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+
+                if (tab === 'calendly') {
+                    document.querySelector('.tab:first-child').classList.add('active');
+                    document.getElementById('calendlyTab').classList.add('active');
+                } else {
+                    document.querySelector('.tab:last-child').classList.add('active');
+                    document.getElementById('manualTab').classList.add('active');
+                }
+            },
+
+            generateCalendarInvite() {
+                const datetime = document.getElementById('manualDateTime').value;
+                const duration = document.getElementById('manualDuration').value;
+                const meetingType = document.getElementById('meetingType').value;
+
+                const subject = `${meetingType.charAt(0).toUpperCase() + meetingType.slice(1)} Call - ${this.data.company.companyName}`;
+                const body = `Meeting details:\nDate: ${datetime}\nDuration: ${duration} minutes\nType: ${meetingType}`;
+
+                // Generate ICS file (simplified)
+                const ics = `BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+SUMMARY:${subject}
+DESCRIPTION:${body}
+END:VEVENT
+END:VCALENDAR`;
+
+                const blob = new Blob([ics], { type: 'text/calendar' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'meeting-invite.ics';
+                a.click();
+            },
+
+            // FOLLOW-UP EMAILS
+            useFollowUpTemplate(type) {
+                const editor = document.getElementById('followUpEditor');
+                const subject = document.getElementById('followUpSubject');
+                const body = document.getElementById('followUpBody');
+
+                const templates = {
+                    '3day': {
+                        subject: `Following up on our call - ${this.data.company.companyName}`,
+                        body: `Hi ${this.data.company.prospectName},\n\nHope you're well! I wanted to follow up on the proposal I sent 3 days ago.\n\nQuick recap:\n- We discussed ${this.data.pain.currentState?.substring(0, 50)}...\n- Estimated impact: $${this.calculateROI().totalMonthlyImpact.toLocaleString()}/month\n\nAny questions? Happy to jump on a quick call.\n\nBest,\n[Your Name]`
+                    },
+                    '7day': {
+                        subject: `Checking in - ${this.data.company.companyName}`,
+                        body: `Hi ${this.data.company.prospectName},\n\nJust checking in! I know you're busy evaluating options.\n\nIs there anything I can clarify about the proposal?\n\nBest,\n[Your Name]`
+                    }
+                    // Add more templates
+                };
+
+                const template = templates[type] || { subject: '', body: '' };
+                subject.value = template.subject;
+                body.value = template.body;
+                editor.classList.remove('hidden');
+            },
+
+            copyFollowUpEmail() {
+                const subject = document.getElementById('followUpSubject').value;
+                const body = document.getElementById('followUpBody').value;
+                const text = `Subject: ${subject}\n\n${body}`;
+
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('Email copied to clipboard!');
+                });
+            },
+
+            // DASHBOARD
+            renderDashboard() {
+                const content = document.getElementById('dashboardContent');
+                const totalCalls = this.crm.length;
+                const totalValue = this.crm.reduce((sum, entry) => sum + (entry.revenue || 0), 0);
+
+                content.innerHTML = `
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                        <div class="card">
+                            <h3 style="font-size: 32px; color: var(--accent);">${totalCalls}</h3>
+                            <p style="font-size: 12px; color: var(--text-muted);">Total Calls</p>
+                        </div>
+                        <div class="card">
+                            <h3 style="font-size: 32px; color: var(--success);">$${(totalValue/1000).toFixed(0)}k</h3>
+                            <p style="font-size: 12px; color: var(--text-muted);">Pipeline Value</p>
+                        </div>
+                    </div>
+                `;
+            },
+
+            // CRM
+            renderCRM() {
+                const content = document.getElementById('crmContent');
+                if (!this.crm.length) {
+                    content.innerHTML = '<p style="text-align: center; color: var(--text-muted);">No prospects yet</p>';
+                    return;
+                }
+
+                content.innerHTML = `
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid var(--border);">
+                                <th style="padding: 12px; text-align: left;">Company</th>
+                                <th style="padding: 12px; text-align: left;">Contact</th>
+                                <th style="padding: 12px; text-align: left;">Value</th>
+                                <th style="padding: 12px; text-align: left;">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${this.crm.map(entry => `
+                                <tr style="border-bottom: 1px solid var(--border);">
+                                    <td style="padding: 12px;">${entry.companyName || 'N/A'}</td>
+                                    <td style="padding: 12px;">${entry.prospectName || 'N/A'}</td>
+                                    <td style="padding: 12px;">$${(entry.revenue || 0).toLocaleString()}</td>
+                                    <td style="padding: 12px;">${entry.date || 'N/A'}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            },
+
+            exportCRM() {
+                const csv = [
+                    ['Company', 'Contact', 'Industry', 'Value', 'Date'].join(','),
+                    ...this.crm.map(e => [
+                        e.companyName || '',
+                        e.prospectName || '',
+                        e.industry || '',
+                        e.revenue || 0,
+                        e.date || ''
+                    ].join(','))
+                ].join('\n');
+
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `CRM-Export-${new Date().toLocaleDateString()}.csv`;
+                a.click();
+            },
+
+            // UTILITY
+            calculateROI() {
+                const hoursPerWeek = this.data.metrics.hoursPerWeek || 0;
+                const teamSize = this.data.metrics.teamSize || 1;
+                const monthlyImpact = hoursPerWeek * 4 * teamSize * 150;
+                return {
+                    totalMonthlyImpact: monthlyImpact,
+                    annualSavings: monthlyImpact * 12
+                };
+            },
+
+            updateUI() {
+                const progress = (this.currentStep / this.totalSteps) * 100;
+                document.getElementById('progressFill').style.width = progress + '%';
+                document.getElementById('progressText').textContent = `Step ${this.currentStep} of ${this.totalSteps}`;
+                document.getElementById('progressPercent').textContent = Math.round(progress);
+                document.getElementById('sidebarStepIndicator').textContent = `Step ${this.currentStep} of ${this.totalSteps}`;
+                this.updateSummary();
+            },
+
+            nextStep() {
+                if (this.currentStep < this.totalSteps) {
+                    this.currentStep++;
+                    this.updateUI();
+                    this.saveProgress();
+                }
+            },
+
+            prevStep() {
+                if (this.currentStep > 1) {
+                    this.currentStep--;
+                    this.updateUI();
+                }
+            },
+
+            generateAll() {
+                alert('Generating all documents with PDF support...');
+                this.generatePDF('Proposal');
+                // Add more generation logic
+            },
+
+            resetAll() {
+                if (confirm('Reset all data?')) {
+                    localStorage.clear();
+                    location.reload();
+                }
+            },
+
+            toggleMobileSidebar() {
+                document.getElementById('mainSidebar').classList.toggle('mobile-open');
+            }
+        };
+
+        // INITIALIZE
+        window.addEventListener('load', () => {
+            app.init();
+        });
+    </script>
+</body>
+</html>

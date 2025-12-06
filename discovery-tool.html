@@ -1135,6 +1135,24 @@
     </div>
 
     <script>
+        // Create a queue for app calls until app is ready
+        const appQueue = [];
+        const appProxy = new Proxy({}, {
+            get(target, prop) {
+                return function(...args) {
+                    if (typeof window.app === 'object' && typeof window.app[prop] === 'function') {
+                        return window.app[prop](...args);
+                    } else {
+                        console.warn(`app.${prop} not ready yet, queueing call`);
+                        appQueue.push({ prop, args });
+                    }
+                };
+            }
+        });
+
+        // Make app globally accessible through proxy
+        window.app = appProxy;
+
         // APPLICATION STATE
         const app = {
             currentStep: 1,
@@ -1796,13 +1814,17 @@ AI Automation Consultant`;
             },
 
             scheduleCallCTA() {
-                // This would ideally link to your Calendly or booking system
-                const email = this.data.company.prospectEmail || '';
-                const name = this.data.company.prospectName || '';
-                const body = encodeURIComponent(`Hi Vaishali,\n\nI'd like to discuss my AI automation strategy. I have potential for $${(this.lastCRMData?.metrics.annualSavings || 0).toLocaleString()} in annual savings.\n\nBest regards,\n${name}`);
+                // Link to your Calendly or booking system
+                // Replace CALENDLY_USERNAME with your actual Calendly username or booking URL
+                const calendlyUrl = 'https://calendly.com/your-calendly-username/30min';
 
-                // Open email client
-                window.location.href = `mailto:vaishali@yourdomain.com?to=${email}&subject=AI Automation Strategy Discussion&body=${body}`;
+                // If Calendly URL is not configured, show alert
+                if (calendlyUrl.includes('your-calendly-username')) {
+                    alert('Booking link not yet configured. Please add your Calendly URL to enable scheduling.');
+                    return;
+                }
+
+                window.location.href = calendlyUrl;
             },
 
             downloadProposal() {
@@ -2011,28 +2033,42 @@ Talk soon,
 
             renderDashboard() {
                 const totalCalls = this.crm.length;
-                const totalValue = this.crm.reduce((sum, entry) => sum + (entry.revenue || 0), 0);
+                const totalValue = this.crm.reduce((sum, entry) => sum + (entry.metrics?.annualSavings || entry.revenue || 0), 0);
                 const avgValue = totalCalls > 0 ? totalValue / totalCalls : 0;
+                const highPriorityLeads = this.crm.filter(e => e.alertFlag === 'High Priority Lead').length;
+                const highReadinessLeads = this.crm.filter(e => e.scores?.aiReadiness > 70).length;
+                const totalAutomationPotential = this.crm.reduce((sum, entry) => sum + (entry.scores?.automationPotential || 0), 0);
+                const avgAutomationPotential = totalCalls > 0 ? Math.round(totalAutomationPotential / totalCalls) : 0;
                 const conversionRate = ((this.crm.filter(e => e.status === 'Proposal Sent').length / totalCalls) * 100 || 0).toFixed(1);
 
                 const html = `
                     <div class="dashboard-card">
-                        <h3>Total Discovery Calls</h3>
+                        <h3>📊 Total Prospects</h3>
                         <div class="value">${totalCalls}</div>
-                        <div class="subtext">Prospects engaged</div>
+                        <div class="subtext">Engaged in discovery</div>
                     </div>
                     <div class="dashboard-card">
-                        <h3>Total Potential Revenue</h3>
-                        <div class="value">$${(totalValue / 1000).toFixed(0)}k</div>
-                        <div class="subtext">Annual impact estimate</div>
+                        <h3>💰 Total Opportunity</h3>
+                        <div class="value">$${(totalValue / 1000000).toFixed(1)}M</div>
+                        <div class="subtext">Annual automation savings</div>
                     </div>
                     <div class="dashboard-card">
-                        <h3>Avg. Opportunity Value</h3>
-                        <div class="value">$${(avgValue / 1000).toFixed(0)}k</div>
-                        <div class="subtext">Per prospect</div>
+                        <h3>🎯 High Priority Leads</h3>
+                        <div class="value">${highPriorityLeads}</div>
+                        <div class="subtext">(>$50k annual savings)</div>
                     </div>
                     <div class="dashboard-card">
-                        <h3>Conversion Rate</h3>
+                        <h3>📈 Avg. Automation Potential</h3>
+                        <div class="value">${avgAutomationPotential}%</div>
+                        <div class="subtext">Process automation possible</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>⚡ Ready-to-Act Leads</h3>
+                        <div class="value">${highReadinessLeads}</div>
+                        <div class="subtext">(AI Readiness >70)</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>📄 Conversion Rate</h3>
                         <div class="value">${conversionRate}%</div>
                         <div class="subtext">Proposals sent</div>
                     </div>
@@ -2067,32 +2103,137 @@ Talk soon,
             },
 
             exportCRMToSheets() {
-                // Generate a CSV export
-                const headers = ['Date', 'Prospect', 'Company', 'Industry', 'Pain Points', 'Est. Revenue', 'Status'];
+                // Show export options
+                const options = confirm(`Export CRM Data Options:\n\n✓ Click OK to export COMPREHENSIVE data (all fields)\n✗ Click Cancel to export SUMMARY data (basic fields)\n\nBoth will download as CSV for import into Google Sheets.`);
+
+                if (options) {
+                    this.exportComprehensiveCRM();
+                } else {
+                    this.exportSummaryCRM();
+                }
+            },
+
+            exportComprehensiveCRM() {
+                // Comprehensive export with all assessment and financial data
+                const headers = [
+                    'Date Added',
+                    'Prospect Name',
+                    'Prospect Email',
+                    'Prospect Phone',
+                    'Company Name',
+                    'Industry',
+                    'Company Size',
+                    'Prospect Role',
+                    'Pain Category',
+                    'Current Pain Description',
+                    'AI Readiness Score',
+                    'Automation Potential %',
+                    'Complexity Level',
+                    'Monthly Impact ($)',
+                    'Annual Savings ($)',
+                    'Payback Period (weeks)',
+                    'Team Size Affected',
+                    'Hours/Week Spent',
+                    'Deal Value ($)',
+                    'Revenue at Risk ($)',
+                    'Key Insights',
+                    'Alert Flag',
+                    'Follow-up Due Date',
+                    'Status',
+                    'Last Updated'
+                ];
+
                 const rows = this.crm.map(entry => [
-                    entry.date,
+                    entry.timestamp ? new Date(entry.timestamp).toLocaleDateString() : entry.date || '',
                     entry.prospectName || '',
+                    entry.email || entry.prospectEmail || '',
+                    entry.prospectPhone || '',
                     entry.companyName || '',
                     entry.industry || '',
-                    entry.pain || '',
-                    entry.revenue || '',
-                    entry.status || ''
+                    entry.companySize || '',
+                    entry.role || '',
+                    (entry.pain && entry.pain.category) || entry.pain || '',
+                    (entry.pain && entry.pain.description) || '',
+                    entry.scores?.aiReadiness || '',
+                    entry.scores?.automationPotential || '',
+                    entry.scores?.complexity || '',
+                    Math.round(entry.metrics?.monthlyImpact || 0),
+                    Math.round(entry.metrics?.annualSavings || 0),
+                    entry.metrics?.paybackWeeks?.toFixed(1) || '',
+                    entry.metrics?.teamSize || '',
+                    entry.metrics?.hoursPerWeek || '',
+                    entry.metrics?.dealValue || '',
+                    entry.metrics?.revenueAtRisk || '',
+                    (entry.insights && entry.insights.join('; ')) || '',
+                    entry.alertFlag || '',
+                    entry.followUpDue || '',
+                    entry.status || 'Prospect',
+                    entry.timestamp ? new Date(entry.timestamp).toLocaleString() : ''
                 ]);
 
+                this.downloadCSV(headers, rows, `CRM-Comprehensive-${new Date().toLocaleDateString()}.csv`);
+
+                alert(`✅ Comprehensive CRM data exported!\n\nInstructions to import into Google Sheets:\n1. Go to google.com/sheets\n2. Click "+ Create New Sheet"\n3. File > Import > Upload > Select CSV\n4. Choose "Replace spreadsheet" option\n5. Click Import data\n\nYour ${this.crm.length} prospect records are ready!`);
+            },
+
+            exportSummaryCRM() {
+                // Summary export with key business metrics
+                const headers = [
+                    'Date',
+                    'Prospect',
+                    'Company',
+                    'Email',
+                    'Industry',
+                    'AI Readiness',
+                    'Automation %',
+                    'Annual Savings',
+                    'Alert Flag',
+                    'Status'
+                ];
+
+                const rows = this.crm.map(entry => [
+                    entry.timestamp ? new Date(entry.timestamp).toLocaleDateString() : entry.date || '',
+                    entry.prospectName || '',
+                    entry.companyName || '',
+                    entry.email || entry.prospectEmail || '',
+                    entry.industry || '',
+                    entry.scores?.aiReadiness || '',
+                    entry.scores?.automationPotential || '',
+                    Math.round(entry.metrics?.annualSavings || 0),
+                    entry.alertFlag || '',
+                    entry.status || 'Prospect'
+                ]);
+
+                this.downloadCSV(headers, rows, `CRM-Summary-${new Date().toLocaleDateString()}.csv`);
+
+                alert(`✅ Summary CRM data exported!\n\nYour ${this.crm.length} prospects have been exported.\n\nTo import into Google Sheets:\n1. Go to google.com/sheets\n2. File > Import > Upload file\n3. Select the downloaded CSV\n4. Click "Import data"`);
+            },
+
+            downloadCSV(headers, rows, filename) {
+                // Escape quotes in CSV
+                const escapeCSV = (str) => {
+                    if (!str) return '';
+                    str = String(str);
+                    if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+                        return `"${str.replace(/"/g, '""')}"`;
+                    }
+                    return str;
+                };
+
                 const csv = [
-                    headers.join(','),
-                    ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+                    headers.map(escapeCSV).join(','),
+                    ...rows.map(row => row.map(escapeCSV).join(','))
                 ].join('\n');
 
-                const blob = new Blob([csv], { type: 'text/csv' });
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `CRM-Export-${new Date().toLocaleDateString()}.csv`;
-                a.click();
-                window.URL.revokeObjectURL(url);
-
-                alert('CRM data exported! Import this CSV into Google Sheets:\n1. Go to Google Sheets\n2. Create new sheet\n3. File > Import > Upload file\n4. Select this CSV');
+                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', filename);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             },
 
             resetAll() {
@@ -2542,6 +2683,20 @@ END:VCALENDAR`;
             }
         };
 
+        // Properly initialize window.app with the real app object
+        window.app = app;
+
+        // Process any queued calls
+        appQueue.forEach(({ prop, args }) => {
+            if (typeof app[prop] === 'function') {
+                try {
+                    app[prop](...args);
+                } catch (err) {
+                    console.error(`Error processing queued call app.${prop}:`, err);
+                }
+            }
+        });
+
         // INITIALIZE
         window.addEventListener('load', () => {
             app.loadCRM();
@@ -2580,32 +2735,30 @@ END:VCALENDAR`;
 
             // Setup button event delegation for all data-action buttons
             document.addEventListener('click', (e) => {
-                const action = e.target.closest('[data-action]')?.getAttribute('data-action');
+                const button = e.target.closest('[data-action]');
+                if (!button) return;
+
+                const action = button.getAttribute('data-action');
                 if (action && typeof app[action] === 'function') {
                     e.preventDefault();
+                    e.stopPropagation();
                     try {
                         app[action]();
                     } catch (err) {
                         console.error(`Error calling app.${action}():`, err);
+                        alert(`Error: ${err.message}`);
                     }
                 }
             });
 
-            // Setup nav button handlers
-            const navButtonHandlers = {
-                'showDashboard': () => app.showDashboard(),
-                'showCRM': () => app.showCRM(),
-                'showFollowUpView': () => app.showFollowUpView(),
-                'showCalendarView': () => app.showCalendarView(),
-                'resetAll': () => app.resetAll()
-            };
-
-            Object.entries(navButtonHandlers).forEach(([action, handler]) => {
-                const btn = document.getElementById(`btn-${action.replace(/([A-Z])/g, '-$1').toLowerCase()}`);
-                if (btn) {
-                    btn.addEventListener('click', handler);
-                }
-            });
+            // Setup nav button handlers with proper ID matching
+            setTimeout(() => {
+                document.getElementById('btn-dashboard')?.addEventListener('click', () => app.showDashboard());
+                document.getElementById('btn-crm')?.addEventListener('click', () => app.showCRM());
+                document.getElementById('btn-followup')?.addEventListener('click', () => app.showFollowUpView());
+                document.getElementById('btn-calendar')?.addEventListener('click', () => app.showCalendarView());
+                document.getElementById('btn-reset')?.addEventListener('click', () => app.resetAll());
+            }, 100);
         });
 
         // AUTO-UPDATE ROI AND PROGRESSIVE SUMMARY

@@ -1,0 +1,92 @@
+<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="eyeGlow" cx="50%" cy="50%">
+      <stop offset="0%" style="stop-color:#00d9ff;stop-opacity:0.6" />
+      <stop offset="70%" style="stop-color:#0066cc;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#ff006e;stop-opacity:0" />
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="neuronal-glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Outer glow -->
+  <circle cx="200" cy="200" r="190" fill="url(#eyeGlow)" filter="url(#glow)" opacity="0.8"/>
+
+  <!-- Iris base -->
+  <circle cx="200" cy="200" r="130" fill="#001a4d" />
+
+  <!-- Iris gradient -->
+  <radialGradient id="irisGradient" cx="50%" cy="30%">
+    <stop offset="0%" style="stop-color:#00d9ff;stop-opacity:1" />
+    <stop offset="50%" style="stop-color:#0099ff;stop-opacity:0.8" />
+    <stop offset="100%" style="stop-color:#001a4d;stop-opacity:1" />
+  </radialGradient>
+  <circle cx="200" cy="200" r="130" fill="url(#irisGradient)" />
+
+  <!-- Neuronal network lines -->
+  <g stroke="#00d9ff" stroke-width="1.5" opacity="0.7" filter="url(#neuronal-glow)">
+    <!-- Upper left neural branches -->
+    <path d="M 200 200 Q 180 150 160 120" fill="none" stroke="#00d9ff"/>
+    <path d="M 200 200 Q 170 140 140 100" fill="none" stroke="#0099ff"/>
+    <path d="M 200 200 Q 175 145 150 110" fill="none" stroke="#ff006e" opacity="0.6"/>
+
+    <!-- Upper right neural branches -->
+    <path d="M 200 200 Q 220 150 240 120" fill="none" stroke="#00d9ff"/>
+    <path d="M 200 200 Q 230 140 260 100" fill="none" stroke="#0099ff"/>
+    <path d="M 200 200 Q 225 145 250 110" fill="none" stroke="#ff006e" opacity="0.6"/>
+
+    <!-- Right neural branches -->
+    <path d="M 200 200 Q 260 190 300 180" fill="none" stroke="#00d9ff"/>
+    <path d="M 200 200 Q 265 210 310 210" fill="none" stroke="#0099ff"/>
+    <path d="M 200 200 Q 260 220 295 240" fill="none" stroke="#ff006e" opacity="0.6"/>
+
+    <!-- Left neural branches -->
+    <path d="M 200 200 Q 140 190 100 180" fill="none" stroke="#00d9ff"/>
+    <path d="M 200 200 Q 135 210 90 210" fill="none" stroke="#0099ff"/>
+    <path d="M 200 200 Q 140 220 105 240" fill="none" stroke="#ff006e" opacity="0.6"/>
+
+    <!-- Lower neural branches -->
+    <path d="M 200 200 Q 180 250 160 280" fill="none" stroke="#00d9ff"/>
+    <path d="M 200 200 Q 220 250 240 280" fill="none" stroke="#0099ff"/>
+    <path d="M 200 200 Q 200 260 200 300" fill="none" stroke="#ff006e" opacity="0.6"/>
+  </g>
+
+  <!-- Neural synapses (dots) -->
+  <g fill="#00d9ff" opacity="0.8">
+    <circle cx="160" cy="120" r="2.5"/>
+    <circle cx="240" cy="120" r="2.5"/>
+    <circle cx="300" cy="180" r="2.5"/>
+    <circle cx="310" cy="210" r="2.5"/>
+    <circle cx="295" cy="240" r="2.5"/>
+    <circle cx="160" cy="280" r="2.5"/>
+    <circle cx="240" cy="280" r="2.5"/>
+    <circle cx="200" cy="300" r="2.5"/>
+    <circle cx="100" cy="180" r="2.5"/>
+    <circle cx="90" cy="210" r="2.5"/>
+    <circle cx="105" cy="240" r="2.5"/>
+  </g>
+
+  <!-- Pupil center with glow -->
+  <radialGradient id="pupilGlow" cx="45%" cy="45%">
+    <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+    <stop offset="40%" style="stop-color:#00d9ff;stop-opacity:0.8" />
+    <stop offset="100%" style="stop-color:#000033;stop-opacity:1" />
+  </radialGradient>
+  <circle cx="200" cy="200" r="50" fill="url(#pupilGlow)" />
+
+  <!-- Pupil highlight -->
+  <circle cx="195" cy="195" r="18" fill="#ffffff" opacity="0.4"/>
+  <circle cx="198" cy="198" r="8" fill="#ffffff" opacity="0.7"/>
+</svg>

@@ -851,7 +851,17 @@
                 <div class="profile-image-container">
                     <!-- AI Neuronal Eye Image -->
                     <div class="ai-eye-container">
-                        <img src="assets/neuronal-eye.png" alt="AI Neuronal Eye" class="eye-image" id="aiEyeImage">
+                        <img src="assets/neuronal-eye.png" alt="AI Neuronal Eye" class="eye-image" id="aiEyeImage" onerror="
+                            // Try SVG as fallback
+                            if (!this.dataset.tried) {
+                                this.dataset.tried = 'true';
+                                this.src = 'assets/neuronal-eye.svg';
+                            } else {
+                                // Both PNG and SVG failed, show CSS fallback
+                                this.style.display = 'none';
+                                document.querySelector('.eye-fallback').style.display = 'block';
+                            }
+                        ">
                     </div>
                     <style>
                         .ai-eye-container {
@@ -940,9 +950,6 @@
                     <a href="https://www.linkedin.com/in/vaishali7/" target="_blank" title="LinkedIn">
                         <i class="fab fa-linkedin"></i>
                     </a>
-                    <a href="mailto:your.email@example.com" title="Email">
-                        <i class="fas fa-envelope"></i>
-                    </a>
                 </div>
             </div>
 
@@ -960,7 +967,7 @@
 
                 <div class="hero-cta">
                     <a href="discovery-tool.html" class="btn-primary">🚀 Launch Discovery Tool</a>
-                    <a href="mailto:your.email@example.com" class="btn-secondary">Start a Conversation</a>
+                    <a href="scorecard.html" class="btn-secondary">Quick Assessment</a>
                     <a href="#expertise" class="btn-secondary">Learn More</a>
                 </div>
             </div>
@@ -1044,7 +1051,6 @@
         <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">Vaishali Mehmi | AI Automation Consultant | Enterprise AI Implementation</p>
         <div class="footer-links">
             <a href="https://www.linkedin.com/in/vaishali7/" target="_blank">LinkedIn</a>
-            <a href="mailto:your.email@example.com">Email</a>
         </div>
     </footer>
 

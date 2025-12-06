@@ -7,18 +7,21 @@
 A comprehensive toolkit for AI automation consultants that includes:
 
 1. **Enterprise Portfolio Website** - Professional online presence with dark mode, activity tracking, and modern design
-2. **Discovery Call Tool** - Production-grade app for running discovery calls and generating proposals
-3. **Complete Documentation** - Guides, reference cards, and setup instructions
+2. **AI Readiness Scorecard** - Interactive assessment tool to evaluate client AI maturity and automation potential
+3. **Discovery Call Tool** - Production-grade app for running discovery calls and generating proposals
+4. **Complete Documentation** - Guides, reference cards, and setup instructions
 
 ## 📦 What's Included
 
 ```
 Automation_discovery/
 ├── index.html                    # Professional portfolio website
+├── scorecard.html                # AI Readiness Scorecard assessment
 ├── discovery-tool.html           # Discovery call & proposal tool
 ├── QUICK-REFERENCE-CARD.txt      # Print-friendly call guide
 ├── DISCOVERY-PRO-GUIDE.txt       # Complete setup & usage guide
 ├── FINAL-SUMMARY.txt             # 2-minute system overview
+├── 101-IMPLEMENTATION-PLAN.md    # Enhancement implementation guide
 ├── README.md                     # This file
 └── LICENSE                       # MIT License
 ```
@@ -34,6 +37,16 @@ Automation_discovery/
 - ✅ **Scroll Tracking**: Automatic milestones at 25%, 50%, 75%, 100%
 - ✅ **Mobile Responsive**: Collapsible sidebar for mobile devices
 - ✅ **Discovery Tool Link**: Prominent CTA to launch discovery tool
+
+### AI Readiness Scorecard (scorecard.html)
+
+- ✅ **10-Question Assessment**: Comprehensive evaluation of AI maturity
+- ✅ **3 Key Metrics**: AI Readiness, Manual Processes, Automation Upside
+- ✅ **Smart Scoring Algorithm**: Calculates scores based on organizational factors
+- ✅ **Dark Theme Design**: Matches modern tech aesthetic with cyan/pink accents
+- ✅ **Interactive Results**: Color-coded interpretations and actionable insights
+- ✅ **Mobile Responsive**: Works perfectly on all devices
+- ✅ **Lead Qualifier**: Perfect pre-discovery tool to identify high-potential prospects
 
 ### Discovery Tool (discovery-tool.html)
 

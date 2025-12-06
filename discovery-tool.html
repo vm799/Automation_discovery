@@ -639,13 +639,23 @@
                         <h2>📋 Company Basics</h2>
 
                         <div class="form-group">
-                            <label>Prospect Name</label>
-                            <input type="text" id="prospect-name" placeholder="e.g., Sarah Chen">
+                            <label>Prospect Name *</label>
+                            <input type="text" id="prospect-name" placeholder="e.g., Sarah Chen" required>
                         </div>
 
                         <div class="form-group">
-                            <label>Company Name</label>
-                            <input type="text" id="company-name" placeholder="e.g., Local Physio Clinic">
+                            <label>Email Address *</label>
+                            <input type="email" id="prospect-email" placeholder="e.g., sarah@company.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="tel" id="prospect-phone" placeholder="e.g., +1 (555) 123-4567">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Company Name *</label>
+                            <input type="text" id="company-name" placeholder="e.g., Local Physio Clinic" required>
                         </div>
 
                         <div class="form-group">
@@ -1157,16 +1167,26 @@
 
             validateStep(step) {
                 if (step === 1) {
-                    const name = document.getElementById('prospect-name').value;
-                    const company = document.getElementById('company-name').value;
+                    const name = document.getElementById('prospect-name').value.trim();
+                    const email = document.getElementById('prospect-email').value.trim();
+                    const company = document.getElementById('company-name').value.trim();
                     const role = document.getElementById('prospect-role').value;
                     const industry = document.getElementById('industry').value;
                     const size = document.querySelector('input[name="company-size"]:checked');
 
-                    if (!name || !company || !role || !industry || !size) {
-                        alert('Please fill in all company basics');
+                    // Email validation regex
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                    if (!name || !email || !company || !role || !industry || !size) {
+                        alert('Please fill in all required fields (marked with *)');
                         return false;
                     }
+
+                    if (!emailRegex.test(email)) {
+                        alert('Please enter a valid email address');
+                        return false;
+                    }
+
                     return true;
                 } else if (step === 2) {
                     const state = document.getElementById('current-state').value;
@@ -1183,8 +1203,10 @@
             saveStepData() {
                 if (this.currentStep === 1) {
                     this.data.company = {
-                        prospectName: document.getElementById('prospect-name').value,
-                        companyName: document.getElementById('company-name').value,
+                        prospectName: document.getElementById('prospect-name').value.trim(),
+                        prospectEmail: document.getElementById('prospect-email').value.trim(),
+                        prospectPhone: document.getElementById('prospect-phone').value.trim(),
+                        companyName: document.getElementById('company-name').value.trim(),
                         role: document.getElementById('prospect-role').value,
                         industry: document.getElementById('industry').value,
                         size: document.querySelector('input[name="company-size"]:checked')?.value
@@ -2264,6 +2286,35 @@ END:VCALENDAR`;
         // INITIALIZE
         window.addEventListener('load', () => {
             app.loadCRM();
+
+            // Load scorecard data if coming from scorecard assessment
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('fromScorecard')) {
+                const assessmentResults = sessionStorage.getItem('assessmentResults');
+                if (assessmentResults) {
+                    try {
+                        const scores = JSON.parse(assessmentResults);
+                        // Display scorecard context
+                        const scorecardBanner = document.createElement('div');
+                        scorecardBanner.style.cssText = 'background: linear-gradient(135deg, #00d9ff 0%, #0066cc 100%); color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: center;';
+                        scorecardBanner.innerHTML = `
+                            <div style="font-weight: 600; margin-bottom: 10px;">📊 Your AI Readiness Scores</div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; font-size: 14px;">
+                                <div><strong>AI Readiness:</strong> ${scores.aiReadiness}%</div>
+                                <div><strong>Manual Processes:</strong> ${scores.manualProcesses}%</div>
+                                <div><strong>Automation Upside:</strong> ${scores.automationUpside}%</div>
+                            </div>
+                        `;
+                        const discoveryFlow = document.getElementById('discovery-flow');
+                        if (discoveryFlow) {
+                            discoveryFlow.insertBefore(scorecardBanner, discoveryFlow.firstChild);
+                        }
+                    } catch (e) {
+                        console.error('Error loading scorecard data:', e);
+                    }
+                }
+            }
+
             app.updateUI();
             app.startAutosave(); // Start auto-save
             app.updateProgressiveSummary(); // Initial summary update

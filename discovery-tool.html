@@ -1135,6 +1135,24 @@
     </div>
 
     <script>
+        // Create a queue for app calls until app is ready
+        const appQueue = [];
+        const appProxy = new Proxy({}, {
+            get(target, prop) {
+                return function(...args) {
+                    if (typeof window.app === 'object' && typeof window.app[prop] === 'function') {
+                        return window.app[prop](...args);
+                    } else {
+                        console.warn(`app.${prop} not ready yet, queueing call`);
+                        appQueue.push({ prop, args });
+                    }
+                };
+            }
+        });
+
+        // Make app globally accessible through proxy
+        window.app = appProxy;
+
         // APPLICATION STATE
         const app = {
             currentStep: 1,
@@ -2542,6 +2560,20 @@ END:VCALENDAR`;
             }
         };
 
+        // Properly initialize window.app with the real app object
+        window.app = app;
+
+        // Process any queued calls
+        appQueue.forEach(({ prop, args }) => {
+            if (typeof app[prop] === 'function') {
+                try {
+                    app[prop](...args);
+                } catch (err) {
+                    console.error(`Error processing queued call app.${prop}:`, err);
+                }
+            }
+        });
+
         // INITIALIZE
         window.addEventListener('load', () => {
             app.loadCRM();
@@ -2580,32 +2612,30 @@ END:VCALENDAR`;
 
             // Setup button event delegation for all data-action buttons
             document.addEventListener('click', (e) => {
-                const action = e.target.closest('[data-action]')?.getAttribute('data-action');
+                const button = e.target.closest('[data-action]');
+                if (!button) return;
+
+                const action = button.getAttribute('data-action');
                 if (action && typeof app[action] === 'function') {
                     e.preventDefault();
+                    e.stopPropagation();
                     try {
                         app[action]();
                     } catch (err) {
                         console.error(`Error calling app.${action}():`, err);
+                        alert(`Error: ${err.message}`);
                     }
                 }
             });
 
-            // Setup nav button handlers
-            const navButtonHandlers = {
-                'showDashboard': () => app.showDashboard(),
-                'showCRM': () => app.showCRM(),
-                'showFollowUpView': () => app.showFollowUpView(),
-                'showCalendarView': () => app.showCalendarView(),
-                'resetAll': () => app.resetAll()
-            };
-
-            Object.entries(navButtonHandlers).forEach(([action, handler]) => {
-                const btn = document.getElementById(`btn-${action.replace(/([A-Z])/g, '-$1').toLowerCase()}`);
-                if (btn) {
-                    btn.addEventListener('click', handler);
-                }
-            });
+            // Setup nav button handlers with proper ID matching
+            setTimeout(() => {
+                document.getElementById('btn-dashboard')?.addEventListener('click', () => app.showDashboard());
+                document.getElementById('btn-crm')?.addEventListener('click', () => app.showCRM());
+                document.getElementById('btn-followup')?.addEventListener('click', () => app.showFollowUpView());
+                document.getElementById('btn-calendar')?.addEventListener('click', () => app.showCalendarView());
+                document.getElementById('btn-reset')?.addEventListener('click', () => app.resetAll());
+            }, 100);
         });
 
         // AUTO-UPDATE ROI AND PROGRESSIVE SUMMARY

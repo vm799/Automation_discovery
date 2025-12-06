@@ -1814,13 +1814,17 @@ AI Automation Consultant`;
             },
 
             scheduleCallCTA() {
-                // This would ideally link to your Calendly or booking system
-                const email = this.data.company.prospectEmail || '';
-                const name = this.data.company.prospectName || '';
-                const body = encodeURIComponent(`Hi Vaishali,\n\nI'd like to discuss my AI automation strategy. I have potential for $${(this.lastCRMData?.metrics.annualSavings || 0).toLocaleString()} in annual savings.\n\nBest regards,\n${name}`);
+                // Link to your Calendly or booking system
+                // Replace CALENDLY_USERNAME with your actual Calendly username or booking URL
+                const calendlyUrl = 'https://calendly.com/your-calendly-username/30min';
 
-                // Open email client
-                window.location.href = `mailto:vaishali@yourdomain.com?to=${email}&subject=AI Automation Strategy Discussion&body=${body}`;
+                // If Calendly URL is not configured, show alert
+                if (calendlyUrl.includes('your-calendly-username')) {
+                    alert('Booking link not yet configured. Please add your Calendly URL to enable scheduling.');
+                    return;
+                }
+
+                window.location.href = calendlyUrl;
             },
 
             downloadProposal() {

@@ -851,7 +851,17 @@
                 <div class="profile-image-container">
                     <!-- AI Neuronal Eye Image -->
                     <div class="ai-eye-container">
-                        <img src="assets/neuronal-eye.png" alt="AI Neuronal Eye" class="eye-image" id="aiEyeImage" onerror="this.style.display='none'; document.querySelector('.eye-fallback').style.display='block';">
+                        <img src="assets/neuronal-eye.png" alt="AI Neuronal Eye" class="eye-image" id="aiEyeImage" onerror="
+                            // Try SVG as fallback
+                            if (!this.dataset.tried) {
+                                this.dataset.tried = 'true';
+                                this.src = 'assets/neuronal-eye.svg';
+                            } else {
+                                // Both PNG and SVG failed, show CSS fallback
+                                this.style.display = 'none';
+                                document.querySelector('.eye-fallback').style.display = 'block';
+                            }
+                        ">
                     </div>
                     <style>
                         .ai-eye-container {

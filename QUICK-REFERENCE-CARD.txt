@@ -1,0 +1,246 @@
+═══════════════════════════════════════════════════════════════════════════════
+DISCOVERY PRO — QUICK REFERENCE CARD
+Print This. Use During Calls.
+═══════════════════════════════════════════════════════════════════════════════
+
+## THE 5-STEP FLOW
+
+STEP 1: COMPANY BASICS (2 min)
+□ Prospect name
+□ Company name
+□ Role/title
+□ Industry
+□ Company size
+
+→ "Continue"
+
+STEP 2: PAIN POINTS (8-10 min)
+□ Current state (what do they say?)
+□ Pain category (dropdown)
+□ Specific pain items (checkboxes)
+□ Root cause (why is this happening?)
+→ Listen to sidebar suggestions
+
+→ "Continue"
+
+STEP 3: TECH AUDIT (5 min)
+□ List all tools they use
+  Type tool name + press Enter
+□ Document integration gaps
+  (Which tools don't talk to each other?)
+
+→ "Continue"
+
+STEP 4: METRICS (5 min)
+□ Future vision (what would winning look like?)
+□ Team size affected
+□ Hours/week currently spent
+□ Deal value
+□ Volume per week
+□ Revenue at risk
+□ Severity (1-10 slider)
+
+→ "Generate Recommendations"
+
+STEP 5: REVIEW (2 min)
+□ Final notes
+→ "Generate All Documents"
+
+TOTAL TIME: 25-30 minutes
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## HOW TO RUN A DISCOVERY CALL
+
+BEFORE CALL:
+[ ] Open discovery-tool.html in browser
+[ ] Minimize sidebar (or close)
+[ ] Laptop on stand visible to them
+[ ] Have this card nearby
+
+OPENING (30 sec):
+"Thanks for making time. I like to take notes as we talk and really understand
+your situation. Then I'll put together a custom proposal specific to YOU, not
+generic. Sound good?"
+
+STEP 1 (2 min):
+Enter: Name, company, role, industry, size
+Say: "Just getting some basics down..."
+
+STEP 2 (10 min):
+Ask:
+1. "What does a typical week look like?"
+2. "Where does your business feel most chaotic?"
+3. "Why is that happening? Root cause?"
+4. "How much time is this costing you per week?"
+5. "Who else is affected?"
+→ Type their answers into form
+
+STEP 3 (5 min):
+Ask: "What tools do you currently use?"
+→ As they list, type each one, press Enter
+→ Ask: "Do those tools talk to each other? What's the gap?"
+
+STEP 4 (5 min):
+Ask: "If we solved this, what could you do instead?"
+Ask: "How many people? How many hours per week?"
+Ask: "What's your deal value? Volume?"
+→ Enter metrics
+→ Adjust severity slider (1-10)
+
+STEP 5 (2 min):
+Ask: "Anything else I should know?"
+→ Type final notes
+→ Click "Generate All Documents"
+
+CLOSING (30 sec):
+"I'm going to put together a proposal specific to your situation
+with your numbers and recommendations. I'll send it by tomorrow.
+Then we'll do a 30-minute tech scoping call to confirm scope and investment.
+Sound good?"
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## AFTER THE CALL (Same day, <2 hours)
+
+□ Review generated proposal on Results tab
+□ Download 3 documents:
+  - Proposal TXT
+  - Scope of Work TXT
+  - Contract TXT
+□ Copy email template
+□ Attach documents
+□ Send email by tomorrow
+□ Proposal auto-saves to CRM
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## SIDEBAR TIPS (During Call)
+
+RIGHT SIDE HAS 3 SECTIONS:
+
+1. "Next Questions to Ask"
+   → Read aloud if you get stuck
+   → Keeps conversation flowing
+
+2. "Pattern Detection"
+   → Shows what problem cluster they have
+   → Helps you prioritize solutions
+
+3. "Quick ROI Estimate"
+   → Updates as you enter metrics
+   → Use in email: "We estimate +$X/month impact"
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## KEY NUMBERS TO REMEMBER
+
+Times:
+- Step 1: 2 min (basics)
+- Step 2: 8-10 min (pain)
+- Step 3: 5 min (tools)
+- Step 4: 5 min (metrics)
+- Step 5: 2 min (review)
+- TOTAL: 25-30 min
+
+ROI Formula (in your head):
+Hours/week × 52 × team size × $150/hr = Annual savings
+
+Revenue Impact:
+Lost units × unit value = Monthly revenue opportunity
+
+Payback:
+Investment ÷ (Monthly Savings ÷ 4) = Weeks to payback
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## RED FLAGS (Not a fit, move on)
+
+🚩 No clear #1 pain (too scattered)
+🚩 Won't quantify impact (not urgent)
+🚩 Not a decision-maker (dead end)
+🚩 "Let me think about it" with no timeline (that's a no)
+🚩 Timeline is "someday" (not urgent)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## GREEN FLAGS (Likely to convert)
+
+🟢 Clear #1 pain that frustrates them
+🟢 Can quantify in time or money
+🟢 Decision-maker (or will involve one immediately)
+🟢 Timeline is "this month" or "next month"
+🟢 Budget is defined
+🟢 They ask YOU questions (engagement)
+🟢 Mentions lost revenue (urgency)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## CRITICAL: LISTEN 70%, TALK 30%
+
+DON'T:
+✗ Pitch your solution during discovery
+✗ Talk about tools/tech
+✗ Interrupt them
+✗ Suggest pain points
+✗ Say "everything's fine" is ok
+
+DO:
+✓ Take visible notes
+✓ Ask "why?" 2-3 times
+✓ Quote them back in proposal
+✓ Use their language, not yours
+✓ Confirm decision-making authority
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## DASHBOARD SHORTCUT
+
+After each call:
+→ Click "Dashboard" tab
+→ See totals updated automatically
+→ Total calls, total $ opportunity, conversion rate
+
+After 5+ calls:
+→ Review patterns
+→ What pain categories convert best?
+→ What industries?
+→ Adjust your strategy
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## IF YOU GET STUCK IN A CALL
+
+Just say:
+"Let me make sure I understand..."
+[Read from sidebar question]
+
+This resets the conversation and gets them talking again.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## EMAIL TEMPLATE REMINDER
+
+After you download proposal:
+1. Click "Email Template" button
+2. Copy entire template
+3. Paste into Gmail/Outlook
+4. Customize with call-specific details
+5. Attach documents
+6. Send within 24 hours
+
+═══════════════════════════════════════════════════════════════════════════════
+
+## THE ONE THING
+
+If you only remember one thing:
+
+LISTEN MORE THAN YOU TALK.
+
+Discovery calls are about understanding, not selling.
+Selling comes in the proposal.
+Your job on the call is to listen and take good notes.
+
+Get that right, everything else follows.
+
+═══════════════════════════════════════════════════════════════════════════════

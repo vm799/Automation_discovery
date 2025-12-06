@@ -609,11 +609,11 @@
             <div class="nav-right">
                 <a href="index.html" class="nav-btn">← Portfolio</a>
                 <a href="scorecard.html" class="nav-btn" style="background: linear-gradient(135deg, #00d9ff 0%, #8b5cf6 100%); color: white;">📈 AI Scorecard</a>
-                <button class="nav-btn" onclick="app.showDashboard()">📊 Dashboard</button>
-                <button class="nav-btn" onclick="app.showCRM()">📇 CRM</button>
-                <button class="nav-btn" onclick="app.showFollowUpView()">✉️ Follow-Ups</button>
-                <button class="nav-btn" onclick="app.showCalendarView()">📅 Calendar</button>
-                <button class="nav-btn" onclick="app.resetAll()" style="color: #ef4444;">↻ Reset</button>
+                <button class="nav-btn" id="btn-dashboard" data-action="showDashboard">📊 Dashboard</button>
+                <button class="nav-btn" id="btn-crm" data-action="showCRM">📇 CRM</button>
+                <button class="nav-btn" id="btn-followup" data-action="showFollowUpView">✉️ Follow-Ups</button>
+                <button class="nav-btn" id="btn-calendar" data-action="showCalendarView">📅 Calendar</button>
+                <button class="nav-btn" id="btn-reset" data-action="resetAll" style="color: #ef4444;">↻ Reset</button>
             </div>
         </div>
     </header>
@@ -709,7 +709,7 @@
                             </div>
                         </div>
 
-                        <button class="btn btn-primary" onclick="app.nextStep()">Continue →</button>
+                        <button class="btn btn-primary" class="btn-step-continue" data-action="nextStep">Continue →</button>
                     </div>
 
                     <!-- STEP 2: CURRENT STATE & PAIN POINTS -->
@@ -747,8 +747,8 @@
                         </div>
 
                         <div class="flex gap-10">
-                            <button class="btn btn-secondary" onclick="app.prevStep()">← Back</button>
-                            <button class="btn btn-primary" onclick="app.nextStep()">Continue →</button>
+                            <button class="btn btn-secondary" class="btn-step-back" data-action="prevStep">← Back</button>
+                            <button class="btn btn-primary" class="btn-step-continue" data-action="nextStep">Continue →</button>
                         </div>
                     </div>
 
@@ -771,8 +771,8 @@
                         </div>
 
                         <div class="flex gap-10">
-                            <button class="btn btn-secondary" onclick="app.prevStep()">← Back</button>
-                            <button class="btn btn-primary" onclick="app.nextStep()">Continue →</button>
+                            <button class="btn btn-secondary" class="btn-step-back" data-action="prevStep">← Back</button>
+                            <button class="btn btn-primary" class="btn-step-continue" data-action="nextStep">Continue →</button>
                         </div>
                     </div>
 
@@ -821,7 +821,7 @@
                         </div>
 
                         <div class="flex gap-10">
-                            <button class="btn btn-secondary" onclick="app.prevStep()">← Back</button>
+                            <button class="btn btn-secondary" class="btn-step-back" data-action="prevStep">← Back</button>
                             <button class="btn btn-primary" onclick="app.nextStep()">Generate Recommendations →</button>
                         </div>
                     </div>
@@ -840,7 +840,7 @@
                         </div>
 
                         <div class="flex gap-10">
-                            <button class="btn btn-secondary" onclick="app.prevStep()">← Back</button>
+                            <button class="btn btn-secondary" class="btn-step-back" data-action="prevStep">← Back</button>
                             <button class="btn btn-success" onclick="app.generateProposal()">✓ Generate All Documents</button>
                         </div>
                     </div>
@@ -1400,6 +1400,18 @@
             },
 
             calculateROI() {
+                // Initialize metrics if not present
+                if (!this.data.metrics) {
+                    this.data.metrics = {
+                        hoursPerWeek: 0,
+                        teamSize: 1,
+                        dealValue: 0,
+                        volumePerWeek: 0,
+                        revenueAtRisk: 0,
+                        severity: 5
+                    };
+                }
+
                 const hoursPerWeek = this.data.metrics.hoursPerWeek || 0;
                 const teamSize = this.data.metrics.teamSize || 1;
                 const dealValue = this.data.metrics.dealValue || 0;
@@ -2318,6 +2330,35 @@ END:VCALENDAR`;
             app.updateUI();
             app.startAutosave(); // Start auto-save
             app.updateProgressiveSummary(); // Initial summary update
+
+            // Setup button event delegation for all data-action buttons
+            document.addEventListener('click', (e) => {
+                const action = e.target.closest('[data-action]')?.getAttribute('data-action');
+                if (action && typeof app[action] === 'function') {
+                    e.preventDefault();
+                    try {
+                        app[action]();
+                    } catch (err) {
+                        console.error(`Error calling app.${action}():`, err);
+                    }
+                }
+            });
+
+            // Setup nav button handlers
+            const navButtonHandlers = {
+                'showDashboard': () => app.showDashboard(),
+                'showCRM': () => app.showCRM(),
+                'showFollowUpView': () => app.showFollowUpView(),
+                'showCalendarView': () => app.showCalendarView(),
+                'resetAll': () => app.resetAll()
+            };
+
+            Object.entries(navButtonHandlers).forEach(([action, handler]) => {
+                const btn = document.getElementById(`btn-${action.replace(/([A-Z])/g, '-$1').toLowerCase()}`);
+                if (btn) {
+                    btn.addEventListener('click', handler);
+                }
+            });
         });
 
         // AUTO-UPDATE ROI AND PROGRESSIVE SUMMARY

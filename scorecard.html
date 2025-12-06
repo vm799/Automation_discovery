@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Readiness Scorecard — AI Automation Consultant</title>
+    <title>AI Readiness Assessment — AI Automation Consultant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -12,548 +13,964 @@
         }
 
         :root {
-            --bg-primary: #0a0e1a;
-            --bg-secondary: #1a1f2e;
-            --bg-card: #252b3d;
-            --text-primary: #e6edf3;
-            --text-secondary: #94a3b8;
+            --bg-primary: #f5f7fa;
+            --bg-secondary: #ffffff;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --accent-primary: #0066cc;
             --accent-cyan: #00d9ff;
             --accent-pink: #ff006e;
-            --accent-purple: #8b5cf6;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
+            --border: #e0e0e0;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #1a1f2e;
+            --text-primary: #e6edf3;
+            --text-secondary: #b8c5d0;
+            --text-muted: #6e7681;
+            --accent-primary: #3b8de8;
+            --border: #2d3540;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
-            background: linear-gradient(135deg, var(--bg-primary) 0%, #0f1419 100%);
+            background: var(--bg-primary);
             color: var(--text-primary);
             line-height: 1.6;
-            min-height: 100vh;
             padding: 40px 20px;
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
-        h1 {
-            font-size: 42px;
-            font-weight: 700;
+        .header {
             text-align: center;
-            margin-bottom: 60px;
-            background: linear-gradient(135deg, var(--accent-cyan) 0%, #00ffaa 100%);
+            margin-bottom: 50px;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, var(--accent-cyan) 0%, var(--accent-pink) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
-        .scorecard {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            margin-bottom: 40px;
+        .header p {
+            font-size: 16px;
+            color: var(--text-secondary);
         }
 
-        .scorecard h2 {
-            font-size: 24px;
-            margin-bottom: 40px;
-            color: var(--text-primary);
-        }
-
-        .scores-grid {
+        /* MAIN LAYOUT */
+        .assessment-wrapper {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: 300px 1fr;
             gap: 30px;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
         }
 
-        .score-item {
-            text-align: center;
+        @media (max-width: 1024px) {
+            .assessment-wrapper {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
         }
 
-        .score-label {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 12px;
+        /* SIDEBAR SECTIONS */
+        .sections-panel {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .sections-header {
+            font-size: 12px;
+            font-weight: 700;
             text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 15px;
             letter-spacing: 0.5px;
         }
 
-        .score-item:nth-child(1) .score-label {
-            color: var(--accent-pink);
-        }
-
-        .score-item:nth-child(2) .score-label {
-            color: var(--accent-cyan);
-        }
-
-        .score-item:nth-child(3) .score-label {
-            color: var(--accent-pink);
-        }
-
-        .score-value {
-            font-size: 56px;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .interpretations {
-            margin-top: 50px;
-        }
-
-        .interpretations h3 {
-            font-size: 20px;
-            margin-bottom: 25px;
-            color: var(--text-primary);
-        }
-
-        .interpretation-item {
-            margin-bottom: 20px;
-            line-height: 1.8;
-        }
-
-        .interpretation-item strong {
-            font-weight: 600;
-        }
-
-        .interpretation-item:nth-child(2) strong {
-            color: var(--accent-pink);
-        }
-
-        .interpretation-item:nth-child(3) strong {
-            color: var(--accent-cyan);
-        }
-
-        .interpretation-item:nth-child(4) strong {
-            color: var(--accent-cyan);
-        }
-
-        .nav-back {
-            text-align: center;
-            margin-top: 40px;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 14px 28px;
-            background: var(--accent-cyan);
-            color: var(--bg-primary);
-            text-decoration: none;
+        .section-item {
+            padding: 12px 14px;
+            margin-bottom: 8px;
             border-radius: 8px;
-            font-weight: 600;
-            font-size: 15px;
-            transition: all 0.3s ease;
-            border: none;
             cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            background: transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .btn:hover {
-            background: #00b8d4;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.3);
+        .section-item:hover {
+            background: rgba(0, 102, 204, 0.08);
+            color: var(--accent-primary);
+            border-color: var(--accent-primary);
         }
 
-        .btn-secondary {
+        .section-item.active {
+            background: rgba(0, 102, 204, 0.12);
+            color: var(--accent-primary);
+            border-color: var(--accent-primary);
+            font-weight: 600;
+        }
+
+        .section-item .icon {
+            width: 16px;
+            text-align: center;
+        }
+
+        /* PROGRESS BAR */
+        .progress-container {
             background: var(--bg-secondary);
-            color: var(--text-primary);
-            border: 1px solid var(--text-secondary);
-            margin-left: 15px;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
         }
 
-        .btn-secondary:hover {
-            background: var(--bg-card);
-            border-color: var(--accent-cyan);
+        .progress-label {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
         }
 
-        /* Assessment Form */
-        .assessment-form {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 40px;
-            margin-bottom: 40px;
-            display: block;
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
         }
 
-        .assessment-form.hidden {
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-cyan) 0%, var(--accent-primary) 100%);
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .progress-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* MAIN CONTENT */
+        .content-area {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .section-container {
             display: none;
         }
 
-        .question {
-            margin-bottom: 35px;
+        .section-container.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
         }
 
-        .question label {
-            display: block;
-            font-size: 16px;
-            margin-bottom: 15px;
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
             color: var(--text-primary);
-            font-weight: 500;
+        }
+
+        .section-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 25px;
+        }
+
+        /* QUESTIONS */
+        .question {
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .question:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .question-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 15px;
         }
 
         .radio-group {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
 
         .radio-option {
             display: flex;
-            align-items: center;
-            padding: 12px;
-            background: var(--bg-secondary);
+            align-items: flex-start;
+            padding: 12px 14px;
+            border: 2px solid var(--border);
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
-            border: 2px solid transparent;
+            background: transparent;
         }
 
         .radio-option:hover {
-            background: rgba(0, 217, 255, 0.1);
-            border-color: var(--accent-cyan);
+            border-color: var(--accent-primary);
+            background: rgba(0, 102, 204, 0.04);
         }
 
-        .radio-option input {
+        .radio-option input[type="radio"] {
+            margin-top: 2px;
             margin-right: 12px;
             width: 20px;
             height: 20px;
             cursor: pointer;
+            accent-color: var(--accent-primary);
+            flex-shrink: 0;
         }
 
         .radio-option label {
-            margin: 0;
             cursor: pointer;
-            flex: 1;
+            margin: 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 400;
         }
 
-        .submit-btn {
-            width: 100%;
-            padding: 18px;
-            font-size: 16px;
-            margin-top: 20px;
+        .radio-option input[type="radio"]:checked ~ label {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .radio-option input[type="radio"]:checked {
+            accent-color: var(--accent-primary);
+        }
+
+        .radio-option.selected {
+            border-color: var(--accent-primary);
+            background: rgba(0, 102, 204, 0.08);
+        }
+
+        /* BUTTONS */
+        .button-group {
+            display: flex;
+            gap: 12px;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, var(--accent-cyan) 0%, var(--accent-primary) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 102, 204, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent-primary);
+            border: 2px solid var(--accent-primary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 102, 204, 0.1);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* RESULTS */
+        .results-container {
+            display: none;
+        }
+
+        .results-container.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .score-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .score-card {
+            background: rgba(0, 102, 204, 0.05);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .score-card:hover {
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow);
+        }
+
+        .score-label {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .score-value {
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent-cyan) 0%, var(--accent-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 5px;
+        }
+
+        .score-interpretation {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .recommendations {
+            background: rgba(0, 102, 204, 0.08);
+            border-left: 4px solid var(--accent-primary);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .recommendations h3 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .recommendations ul {
+            margin-left: 20px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .recommendations li {
+            margin-bottom: 8px;
+        }
+
+        /* NAVIGATION */
+        .nav-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .nav-link.primary {
+            background: linear-gradient(90deg, var(--accent-cyan) 0%, var(--accent-primary) 100%);
+            color: white;
+        }
+
+        .nav-link.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 102, 204, 0.3);
+        }
+
+        .nav-link.secondary {
+            background: transparent;
+            color: var(--accent-primary);
+            border: 2px solid var(--accent-primary);
+        }
+
+        .nav-link.secondary:hover {
+            background: rgba(0, 102, 204, 0.1);
+        }
+
+        /* UTILITIES */
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid;
+            font-size: 14px;
+        }
+
+        .alert-warning {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: #f59e0b;
+            color: #92400e;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: #10b981;
+            color: #065f46;
         }
 
         @media (max-width: 768px) {
-            h1 {
-                font-size: 32px;
+            .header h1 {
+                font-size: 28px;
             }
 
-            .scorecard {
-                padding: 25px;
-            }
-
-            .scores-grid {
-                grid-template-columns: 1fr;
+            .content-area {
+                padding: 20px;
             }
 
             .score-value {
-                font-size: 42px;
+                font-size: 36px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Your AI Readiness Scorecard</h1>
-
-        <!-- Assessment Form -->
-        <div class="assessment-form" id="assessmentForm">
-            <h2>Quick Assessment (10 Questions)</h2>
-            <p style="color: var(--text-secondary); margin-bottom: 30px;">
-                Answer these questions to get your AI readiness score
-            </p>
-
-            <form id="scoreForm">
-                <!-- Question 1 -->
-                <div class="question">
-                    <label>1. How many manual, repetitive tasks does your team perform daily?</label>
-                    <div class="radio-group">
-                        <div class="radio-option">
-                            <input type="radio" name="q1" value="0" id="q1a">
-                            <label for="q1a">Almost none (0-2)</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" name="q1" value="33" id="q1b">
-                            <label for="q1b">Some (3-5)</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" name="q1" value="67" id="q1c">
-                            <label for="q1c">Many (6-10)</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" name="q1" value="100" id="q1d">
-                            <label for="q1d">Too many to count (10+)</label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Question 2 -->
-                <div class="question">
-                    <label>2. Does your organization have a clear AI strategy?</label>
-                    <div class="radio-group">
-                        <div class="radio-option">
-                            <input type="radio" name="q2" value="100" id="q2a">
-                            <label for="q2a">Yes, documented and actively executing</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" name="q2" value="50" id="q2b">
-                            <label for="q2b">In development</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" name="q2" value="25" id="q2c">
-                            <label for="q2c">Discussed but not formalized</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" name="q2" value="0" id="q2d">
-                            <label for="q2d">No strategy</label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Question 3 -->
-                <div class="question">
-                    <label>3. How comfortable is your team with AI tools?</label>
-                    <div class="radio-group">
-                        <div class="radio-option">
-                            <input type="radio" name="q3" value="100" id="q3a">
-                            <label for="q3a">Very comfortable, daily users</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" name="q3" value="67" id="q3b">
-                            <label for="q3b">Some team members use AI regularly</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" name="q3" value="33" id="q3c">
-                            <label for="q3c">Limited exposure</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" name="q3" value="0" id="q3d">
-                            <label for="q3d">No AI experience</label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Question 4 -->
-                <div class="question">
-                    <label>4. What percentage of your processes are documented?</label>
-                    <div class="radio-group">
-                        <div class="radio-option">
-                            <input type="radio" name="q4" value="100" id="q4a">
-                            <label for="q4a">80-100%</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" name="q4" value="67" id="q4b">
-                            <label for="q4b">50-79%</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" name="q4" value="33" id="q4c">
-                            <label for="q4c">20-49%</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" name="q4" value="0" id="q4d">
-                            <label for="q4d">Less than 20%</label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Question 5 -->
-                <div class="question">
-                    <label>5. How much time does your team spend on data entry weekly?</label>
-                    <div class="radio-group">
-                        <div class="radio-option">
-                            <input type="radio" name="q5" value="0" id="q5a">
-                            <label for="q5a">Less than 2 hours</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" name="q5" value="33" id="q5b">
-                            <label for="q5b">2-5 hours</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" name="q5" value="67" id="q5c">
-                            <label for="q5c">5-10 hours</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" name="q5" value="100" id="q5d">
-                            <label for="q5d">More than 10 hours</label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Question 6 -->
-                <div class="question">
-                    <label>6. Do you have budget allocated for AI/automation initiatives?</label>
-                    <div class="radio-group">
-                        <div class="radio-option">
-                            <input type="radio" name="q6" value="100" id="q6a">
-                            <label for="q6a">Yes, significant budget approved</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" name="q6" value="67" id="q6b">
-                            <label for="q6b">Yes, modest budget</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" name="q6" value="33" id="q6c">
-                            <label for="q6c">Under discussion</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" name="q6" value="0" id="q6d">
-                            <label for="q6d">No budget allocated</label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Question 7 -->
-                <div class="question">
-                    <label>7. How often do team members request automation for their tasks?</label>
-                    <div class="radio-group">
-                        <div class="radio-option">
-                            <input type="radio" name="q7" value="100" id="q7a">
-                            <label for="q7a">Frequently (weekly)</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" name="q7" value="67" id="q7b">
-                            <label for="q7b">Regularly (monthly)</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" name="q7" value="33" id="q7c">
-                            <label for="q7c">Occasionally (quarterly)</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" name="q7" value="0" id="q7d">
-                            <label for="q7d">Rarely or never</label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Question 8 -->
-                <div class="question">
-                    <label>8. What is leadership's stance on AI adoption?</label>
-                    <div class="radio-group">
-                        <div class="radio-option">
-                            <input type="radio" name="q8" value="100" id="q8a">
-                            <label for="q8a">Actively championing it</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" name="q8" value="67" id="q8b">
-                            <label for="q8b">Supportive but cautious</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" name="q8" value="33" id="q8c">
-                            <label for="q8c">Neutral/waiting to see results</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" name="q8" value="0" id="q8d">
-                            <label for="q8d">Resistant or skeptical</label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Question 9 -->
-                <div class="question">
-                    <label>9. How integrated is your tech stack?</label>
-                    <div class="radio-group">
-                        <div class="radio-option">
-                            <input type="radio" name="q9" value="100" id="q9a">
-                            <label for="q9a">Highly integrated with APIs</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" name="q9" value="67" id="q9b">
-                            <label for="q9b">Some integrations exist</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" name="q9" value="33" id="q9c">
-                            <label for="q9c">Mostly siloed systems</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" name="q9" value="0" id="q9d">
-                            <label for="q9d">Completely disconnected</label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Question 10 -->
-                <div class="question">
-                    <label>10. How do you currently handle customer inquiries?</label>
-                    <div class="radio-group">
-                        <div class="radio-option">
-                            <input type="radio" name="q10" value="0" id="q10a">
-                            <label for="q10a">Fully automated AI chatbot</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" name="q10" value="33" id="q10b">
-                            <label for="q10b">Hybrid (chatbot + human)</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" name="q10" value="67" id="q10c">
-                            <label for="q10c">Mostly manual with templates</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" name="q10" value="100" id="q10d">
-                            <label for="q10d">100% manual responses</label>
-                        </div>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn submit-btn">Calculate My Scores</button>
-            </form>
+        <div class="header">
+            <h1>AI Readiness Assessment</h1>
+            <p>Quick 10-question assessment to understand your automation potential</p>
         </div>
 
-        <!-- Results (Hidden Initially) -->
-        <div class="scorecard hidden" id="resultsCard">
-            <h2>Your Scores</h2>
-
-            <div class="scores-grid">
-                <div class="score-item">
-                    <div class="score-label">AI Readiness</div>
-                    <div class="score-value" id="aiReadiness">0%</div>
-                </div>
-
-                <div class="score-item">
-                    <div class="score-label">Manual Processes</div>
-                    <div class="score-value" id="manualProcesses">0%</div>
-                </div>
-
-                <div class="score-item">
-                    <div class="score-label">Automation Upside</div>
-                    <div class="score-value" id="automationUpside">0%</div>
-                </div>
+        <div class="progress-container">
+            <div class="progress-label">Progress</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
             </div>
-
-            <div class="interpretations">
-                <h3>Interpretations</h3>
-
-                <div class="interpretation-item">
-                    <strong>AI Readiness:</strong> This score reflects your organization's current preparedness to adopt and benefit from AI technologies.
-                </div>
-
-                <div class="interpretation-item">
-                    <strong>Manual Processes:</strong> This score indicates the extent to which your daily operations rely on manual tasks that could be automated.
-                </div>
-
-                <div class="interpretation-item">
-                    <strong>Automation Upside:</strong> This score highlights the potential for growth and efficiency gains through automation.
-                </div>
-            </div>
+            <div class="progress-text"><span id="progressText">0</span> / 10 questions answered</div>
         </div>
 
-        <div class="nav-back">
-            <a href="discovery-tool.html" class="btn">Start Discovery Call</a>
-            <a href="index.html" class="btn btn-secondary">← Back to Portfolio</a>
+        <div class="assessment-wrapper">
+            <!-- SECTIONS SIDEBAR -->
+            <div class="sections-panel">
+                <div class="sections-header">Sections</div>
+                <button class="section-item active" data-section="0" onclick="switchSection(0)">
+                    <span class="icon">📊</span>
+                    <span>Processes</span>
+                </button>
+                <button class="section-item" data-section="1" onclick="switchSection(1)">
+                    <span class="icon">🎯</span>
+                    <span>Strategy</span>
+                </button>
+                <button class="section-item" data-section="2" onclick="switchSection(2)">
+                    <span class="icon">👥</span>
+                    <span>Team</span>
+                </button>
+                <button class="section-item" data-section="3" onclick="switchSection(3)">
+                    <span class="icon">💼</span>
+                    <span>Resources</span>
+                </button>
+                <button class="section-item" data-section="4" onclick="switchSection(4)">
+                    <span class="icon">🚀</span>
+                    <span>Adoption</span>
+                </button>
+            </div>
+
+            <!-- MAIN CONTENT -->
+            <div class="content-area">
+                <form id="assessmentForm">
+                    <!-- SECTION 0: PROCESSES -->
+                    <div class="section-container active" data-section="0">
+                        <h2 class="section-title">Processes & Operations</h2>
+                        <p class="section-subtitle">Understanding your current workflow efficiency</p>
+
+                        <!-- Q1 -->
+                        <div class="question">
+                            <label class="question-label">1. How many manual, repetitive tasks does your team perform daily?</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" name="q1" value="0" id="q1a" onchange="updateProgress()">
+                                    <label for="q1a">Almost none (0-2)</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="q1" value="33" id="q1b" onchange="updateProgress()">
+                                    <label for="q1b">Some (3-5)</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="q1" value="67" id="q1c" onchange="updateProgress()">
+                                    <label for="q1c">Many (6-10)</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="q1" value="100" id="q1d" onchange="updateProgress()">
+                                    <label for="q1d">Too many to count (10+)</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Q4 -->
+                        <div class="question">
+                            <label class="question-label">4. What percentage of your processes are documented?</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" name="q4" value="100" id="q4a" onchange="updateProgress()">
+                                    <label for="q4a">80-100%</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="q4" value="67" id="q4b" onchange="updateProgress()">
+                                    <label for="q4b">50-79%</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="q4" value="33" id="q4c" onchange="updateProgress()">
+                                    <label for="q4c">20-49%</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="q4" value="0" id="q4d" onchange="updateProgress()">
+                                    <label for="q4d">Less than 20%</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Q5 -->
+                        <div class="question">
+                            <label class="question-label">5. How much time does your team spend on data entry weekly?</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" name="q5" value="0" id="q5a" onchange="updateProgress()">
+                                    <label for="q5a">Less than 2 hours</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="q5" value="33" id="q5b" onchange="updateProgress()">
+                                    <label for="q5b">2-5 hours</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="q5" value="67" id="q5c" onchange="updateProgress()">
+                                    <label for="q5c">5-10 hours</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="q5" value="100" id="q5d" onchange="updateProgress()">
+                                    <label for="q5d">More than 10 hours</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Q10 -->
+                        <div class="question">
+                            <label class="question-label">10. How do you currently handle customer inquiries?</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" name="q10" value="0" id="q10a" onchange="updateProgress()">
+                                    <label for="q10a">Fully automated AI chatbot</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="q10" value="33" id="q10b" onchange="updateProgress()">
+                                    <label for="q10b">Hybrid (chatbot + human)</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="q10" value="67" id="q10c" onchange="updateProgress()">
+                                    <label for="q10c">Mostly manual with templates</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="q10" value="100" id="q10d" onchange="updateProgress()">
+                                    <label for="q10d">100% manual responses</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="button-group">
+                            <div></div>
+                            <button type="button" class="btn btn-primary" onclick="switchSection(1)">Next →</button>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 1: STRATEGY -->
+                    <div class="section-container" data-section="1">
+                        <h2 class="section-title">AI Strategy & Vision</h2>
+                        <p class="section-subtitle">Your organization's preparedness for AI adoption</p>
+
+                        <!-- Q2 -->
+                        <div class="question">
+                            <label class="question-label">2. Does your organization have a clear AI strategy?</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" name="q2" value="100" id="q2a" onchange="updateProgress()">
+                                    <label for="q2a">Yes, documented and actively executing</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="q2" value="50" id="q2b" onchange="updateProgress()">
+                                    <label for="q2b">In development</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="q2" value="25" id="q2c" onchange="updateProgress()">
+                                    <label for="q2c">Discussed but not formalized</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="q2" value="0" id="q2d" onchange="updateProgress()">
+                                    <label for="q2d">No strategy</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Q8 -->
+                        <div class="question">
+                            <label class="question-label">8. What is leadership's stance on AI adoption?</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" name="q8" value="100" id="q8a" onchange="updateProgress()">
+                                    <label for="q8a">Actively championing it</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="q8" value="67" id="q8b" onchange="updateProgress()">
+                                    <label for="q8b">Supportive but cautious</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="q8" value="33" id="q8c" onchange="updateProgress()">
+                                    <label for="q8c">Neutral/waiting to see results</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="q8" value="0" id="q8d" onchange="updateProgress()">
+                                    <label for="q8d">Resistant or skeptical</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="button-group">
+                            <button type="button" class="btn btn-secondary" onclick="switchSection(0)">← Back</button>
+                            <button type="button" class="btn btn-primary" onclick="switchSection(2)">Next →</button>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 2: TEAM -->
+                    <div class="section-container" data-section="2">
+                        <h2 class="section-title">Team Readiness</h2>
+                        <p class="section-subtitle">How equipped your team is for AI tools</p>
+
+                        <!-- Q3 -->
+                        <div class="question">
+                            <label class="question-label">3. How comfortable is your team with AI tools?</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" name="q3" value="100" id="q3a" onchange="updateProgress()">
+                                    <label for="q3a">Very comfortable, daily users</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="q3" value="67" id="q3b" onchange="updateProgress()">
+                                    <label for="q3b">Some team members use AI regularly</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="q3" value="33" id="q3c" onchange="updateProgress()">
+                                    <label for="q3c">Limited exposure</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="q3" value="0" id="q3d" onchange="updateProgress()">
+                                    <label for="q3d">No AI experience</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Q7 -->
+                        <div class="question">
+                            <label class="question-label">7. How often do team members request automation for their tasks?</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" name="q7" value="100" id="q7a" onchange="updateProgress()">
+                                    <label for="q7a">Frequently (weekly)</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="q7" value="67" id="q7b" onchange="updateProgress()">
+                                    <label for="q7b">Regularly (monthly)</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="q7" value="33" id="q7c" onchange="updateProgress()">
+                                    <label for="q7c">Occasionally (quarterly)</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="q7" value="0" id="q7d" onchange="updateProgress()">
+                                    <label for="q7d">Rarely or never</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="button-group">
+                            <button type="button" class="btn btn-secondary" onclick="switchSection(1)">← Back</button>
+                            <button type="button" class="btn btn-primary" onclick="switchSection(3)">Next →</button>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 3: RESOURCES -->
+                    <div class="section-container" data-section="3">
+                        <h2 class="section-title">Resources & Infrastructure</h2>
+                        <p class="section-subtitle">Your available budget and technical foundation</p>
+
+                        <!-- Q6 -->
+                        <div class="question">
+                            <label class="question-label">6. Do you have budget allocated for AI/automation initiatives?</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" name="q6" value="100" id="q6a" onchange="updateProgress()">
+                                    <label for="q6a">Yes, significant budget approved</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="q6" value="67" id="q6b" onchange="updateProgress()">
+                                    <label for="q6b">Yes, modest budget</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="q6" value="33" id="q6c" onchange="updateProgress()">
+                                    <label for="q6c">Under discussion</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="q6" value="0" id="q6d" onchange="updateProgress()">
+                                    <label for="q6d">No budget allocated</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Q9 -->
+                        <div class="question">
+                            <label class="question-label">9. How integrated is your tech stack?</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" name="q9" value="100" id="q9a" onchange="updateProgress()">
+                                    <label for="q9a">Highly integrated with APIs</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="q9" value="67" id="q9b" onchange="updateProgress()">
+                                    <label for="q9b">Some integrations exist</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="q9" value="33" id="q9c" onchange="updateProgress()">
+                                    <label for="q9c">Mostly siloed systems</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="q9" value="0" id="q9d" onchange="updateProgress()">
+                                    <label for="q9d">Completely disconnected</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="button-group">
+                            <button type="button" class="btn btn-secondary" onclick="switchSection(2)">← Back</button>
+                            <button type="button" class="btn btn-primary" onclick="switchSection(4)">Next →</button>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 4: ADOPTION -->
+                    <div class="section-container" data-section="4">
+                        <h2 class="section-title">Ready to Calculate?</h2>
+                        <p class="section-subtitle">Review your answers and get your personalized scores</p>
+
+                        <div class="alert alert-warning">
+                            <strong>Note:</strong> Make sure you've answered all questions in the previous sections before calculating your scores.
+                        </div>
+
+                        <div style="margin-bottom: 30px; padding: 20px; background: rgba(0, 102, 204, 0.05); border-radius: 8px;">
+                            <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 15px;">Your assessment is nearly complete! Click below to:</p>
+                            <ul style="margin-left: 20px; color: var(--text-secondary); font-size: 14px;">
+                                <li>Get your AI Readiness Score</li>
+                                <li>Understand your Manual Processes score</li>
+                                <li>Discover your Automation Upside potential</li>
+                                <li>Get personalized recommendations</li>
+                            </ul>
+                        </div>
+
+                        <div class="button-group">
+                            <button type="button" class="btn btn-secondary" onclick="switchSection(3)">← Back</button>
+                            <button type="submit" class="btn btn-primary" onclick="calculateScores(event)">Calculate My Scores →</button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- RESULTS -->
+                <div class="results-container" id="results">
+                    <h2 class="section-title">Your AI Readiness Scores</h2>
+                    <p class="section-subtitle">Based on your assessment, here's how ready you are for AI automation</p>
+
+                    <div class="score-grid">
+                        <div class="score-card">
+                            <div class="score-label">AI Readiness</div>
+                            <div class="score-value" id="aiReadinessScore">0%</div>
+                            <div class="score-interpretation">Your organization's current preparedness to adopt and benefit from AI technologies</div>
+                        </div>
+                        <div class="score-card">
+                            <div class="score-label">Manual Processes</div>
+                            <div class="score-value" id="manualProcessesScore">0%</div>
+                            <div class="score-interpretation">The extent of your daily operations that rely on manual tasks that could be automated</div>
+                        </div>
+                        <div class="score-card">
+                            <div class="score-label">Automation Upside</div>
+                            <div class="score-value" id="automationUpsideScore">0%</div>
+                            <div class="score-interpretation">Your potential for growth and efficiency gains through AI automation</div>
+                        </div>
+                    </div>
+
+                    <div class="recommendations" id="recommendationsBox">
+                        <h3>📋 Recommended Next Steps</h3>
+                        <ul id="recommendationsList"></ul>
+                    </div>
+
+                    <div class="nav-actions">
+                        <a href="discovery-tool.html?fromScorecard=true" class="nav-link primary">Start Discovery Call</a>
+                        <button type="button" class="nav-link secondary" onclick="resetAssessment()">Retake Assessment</button>
+                        <a href="index.html" class="nav-link secondary">Back to Portfolio</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        const form = document.getElementById('scoreForm');
-        const assessmentForm = document.getElementById('assessmentForm');
-        const resultsCard = document.getElementById('resultsCard');
+        // Store results in sessionStorage for passing to discovery tool
+        let assessmentResults = {};
 
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
+        function switchSection(sectionIndex) {
+            const sections = document.querySelectorAll('.section-container');
+            const buttons = document.querySelectorAll('.section-item');
 
-            // Check if all questions are answered
+            sections.forEach(section => section.classList.remove('active'));
+            buttons.forEach(button => button.classList.remove('active'));
+
+            sections[sectionIndex].classList.add('active');
+            buttons[sectionIndex].classList.add('active');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateProgress() {
+            const questions = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10'];
+            let answered = 0;
+
+            questions.forEach(q => {
+                if (document.querySelector(`input[name="${q}"]:checked`)) {
+                    answered++;
+                }
+            });
+
+            document.getElementById('progressFill').style.width = (answered * 10) + '%';
+            document.getElementById('progressText').textContent = answered;
+
+            // Update section items with visual feedback
+            updateSectionButtons();
+        }
+
+        function updateSectionButtons() {
+            // Section 0: Q1, Q4, Q5, Q10
+            const section0Complete = ['q1', 'q4', 'q5', 'q10'].every(q =>
+                document.querySelector(`input[name="${q}"]:checked`)
+            );
+            updateSectionButtonState(0, section0Complete);
+
+            // Section 1: Q2, Q8
+            const section1Complete = ['q2', 'q8'].every(q =>
+                document.querySelector(`input[name="${q}"]:checked`)
+            );
+            updateSectionButtonState(1, section1Complete);
+
+            // Section 2: Q3, Q7
+            const section2Complete = ['q3', 'q7'].every(q =>
+                document.querySelector(`input[name="${q}"]:checked`)
+            );
+            updateSectionButtonState(2, section2Complete);
+
+            // Section 3: Q6, Q9
+            const section3Complete = ['q6', 'q9'].every(q =>
+                document.querySelector(`input[name="${q}"]:checked`)
+            );
+            updateSectionButtonState(3, section3Complete);
+        }
+
+        function updateSectionButtonState(index, isComplete) {
+            const button = document.querySelector(`.section-item[data-section="${index}"]`);
+            if (isComplete) {
+                button.style.opacity = '1';
+                if (!button.classList.contains('active')) {
+                    button.style.borderColor = 'rgba(0, 102, 204, 0.3)';
+                }
+            }
+        }
+
+        function calculateScores(e) {
+            if (e) e.preventDefault();
+
             const questions = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10'];
             let allAnswered = true;
 
@@ -564,28 +981,11 @@
             });
 
             if (!allAnswered) {
-                alert('Please answer all questions before calculating your score.');
+                alert('Please answer all questions before calculating your scores.');
                 return;
             }
 
-            // Calculate scores
-            const scores = calculateScores();
-
-            // Display results
-            document.getElementById('aiReadiness').textContent = scores.aiReadiness + '%';
-            document.getElementById('manualProcesses').textContent = scores.manualProcesses + '%';
-            document.getElementById('automationUpside').textContent = scores.automationUpside + '%';
-
-            // Hide form, show results
-            assessmentForm.classList.add('hidden');
-            resultsCard.classList.remove('hidden');
-
-            // Scroll to results
-            resultsCard.scrollIntoView({ behavior: 'smooth' });
-        });
-
-        function calculateScores() {
-            // AI Readiness: Questions 2, 3, 6, 8, 9 (strategy, comfort, budget, leadership, integration)
+            // AI Readiness: Q2, Q3, Q6, Q8, Q9
             const aiReadinessQuestions = ['q2', 'q3', 'q6', 'q8', 'q9'];
             let aiReadinessSum = 0;
             aiReadinessQuestions.forEach(q => {
@@ -594,7 +994,7 @@
             });
             const aiReadiness = Math.round(aiReadinessSum / aiReadinessQuestions.length);
 
-            // Manual Processes: Questions 1, 4, 5, 10 (repetitive tasks, documentation, data entry, customer service)
+            // Manual Processes: Q1, Q4, Q5, Q10
             const manualProcessQuestions = ['q1', 'q4', 'q5', 'q10'];
             let manualProcessSum = 0;
             manualProcessQuestions.forEach(q => {
@@ -603,16 +1003,82 @@
             });
             const manualProcesses = Math.round(manualProcessSum / manualProcessQuestions.length);
 
-            // Automation Upside: Inverse of AI Readiness combined with high Manual Processes
-            // Higher manual processes + lower AI readiness = higher upside
+            // Automation Upside
             const automationUpside = Math.round((manualProcesses + (100 - aiReadiness)) / 2);
 
-            return {
+            assessmentResults = {
                 aiReadiness,
                 manualProcesses,
-                automationUpside
+                automationUpside,
+                timestamp: new Date().toISOString()
             };
+
+            // Save to sessionStorage
+            sessionStorage.setItem('assessmentResults', JSON.stringify(assessmentResults));
+            sessionStorage.setItem('assessmentData', JSON.stringify({
+                q1: document.querySelector('input[name="q1"]:checked').value,
+                q2: document.querySelector('input[name="q2"]:checked').value,
+                q3: document.querySelector('input[name="q3"]:checked').value,
+                q4: document.querySelector('input[name="q4"]:checked').value,
+                q5: document.querySelector('input[name="q5"]:checked').value,
+                q6: document.querySelector('input[name="q6"]:checked').value,
+                q7: document.querySelector('input[name="q7"]:checked').value,
+                q8: document.querySelector('input[name="q8"]:checked').value,
+                q9: document.querySelector('input[name="q9"]:checked').value,
+                q10: document.querySelector('input[name="q10"]:checked').value
+            }));
+
+            displayResults(aiReadiness, manualProcesses, automationUpside);
         }
+
+        function displayResults(aiReadiness, manualProcesses, automationUpside) {
+            document.getElementById('assessmentForm').style.display = 'none';
+            document.getElementById('results').classList.add('active');
+
+            document.getElementById('aiReadinessScore').textContent = aiReadiness + '%';
+            document.getElementById('manualProcessesScore').textContent = manualProcesses + '%';
+            document.getElementById('automationUpsideScore').textContent = automationUpside + '%';
+
+            generateRecommendations(aiReadiness, manualProcesses, automationUpside);
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function generateRecommendations(aiReadiness, manualProcesses, automationUpside) {
+            const recommendations = [];
+
+            if (aiReadiness < 40) {
+                recommendations.push('Develop a formal AI strategy with executive sponsorship');
+            }
+            if (manualProcesses > 60) {
+                recommendations.push('Prioritize process documentation and standardization');
+            }
+            if (automationUpside > 70) {
+                recommendations.push('This is your highest opportunity area - quick wins available');
+            }
+            if (aiReadiness > 70) {
+                recommendations.push('Your organization is ready for advanced AI implementations');
+            }
+            recommendations.push('Schedule a discovery call to discuss your specific automation opportunities');
+
+            const list = document.getElementById('recommendationsList');
+            list.innerHTML = recommendations.map(rec => `<li>${rec}</li>`).join('');
+        }
+
+        function resetAssessment() {
+            document.getElementById('assessmentForm').reset();
+            document.getElementById('results').classList.remove('active');
+            document.getElementById('assessmentForm').style.display = 'block';
+            sessionStorage.removeItem('assessmentResults');
+            sessionStorage.removeItem('assessmentData');
+            switchSection(0);
+            updateProgress();
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateProgress();
+        });
     </script>
 </body>
 </html>

@@ -1174,6 +1174,9 @@
                             filter: drop-shadow(0 0 30px rgba(0, 217, 255, 0.4)) drop-shadow(0 0 60px rgba(139, 92, 246, 0.2));
                             animation: float 6s ease-in-out infinite;
                             border-radius: 50%;
+                            /* Mask to hide transparent edges - creates perfect circle */
+                            -webkit-mask-image: radial-gradient(circle at center, black 0%, black 98%, transparent 100%);
+                            mask-image: radial-gradient(circle at center, black 0%, black 98%, transparent 100%);
                         }
 
                         @keyframes float {

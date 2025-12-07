@@ -630,7 +630,6 @@
 
     <!-- jsPDF for PDF Generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
     <!-- HEADER -->
@@ -2598,7 +2597,7 @@ Talk soon,
             followUpTemplates: {
                 '3day': {
                     subject: 'Following up on our call - {company}',
-                    body: `Hi {prospect},\n\nHope you're well! I wanted to follow up on the proposal I sent 3 days ago.\n\nQuick recap:\n- Current challenge: {pain}\n- Estimated monthly impact: ${this.data.metrics.teamSize ? '$' + this.calculateROI().totalMonthlyImpact.toLocaleString() : '[ROI]'}/month\n- Timeline: 8-12 weeks\n\nAny questions? Happy to jump on a quick call.\n\nBest,\n[Your Name]`
+                    body: `Hi {prospect},\n\nHope you're well! I wanted to follow up on the proposal I sent 3 days ago.\n\nQuick recap:\n- Current challenge: {pain}\n- Estimated monthly impact: {monthlyImpact}\n- Timeline: 8-12 weeks\n\nAny questions? Happy to jump on a quick call.\n\nBest,\n[Your Name]`
                 },
                 '7day': {
                     subject: 'Checking in - {company}',
@@ -2627,10 +2626,16 @@ Talk soon,
                     .replace('{company}', this.data.company.companyName || '[Company Name]')
                     .replace('{prospect}', this.data.company.prospectName || '[Prospect Name]');
 
+                // Calculate monthly impact for email
+                const monthlyImpact = this.data.metrics && this.data.metrics.teamSize
+                    ? '$' + roi.totalMonthlyImpact.toLocaleString()
+                    : '[ROI]';
+
                 let body = template.body
                     .replace('{company}', this.data.company.companyName || '[Company Name]')
                     .replace('{prospect}', this.data.company.prospectName || '[Prospect Name]')
-                    .replace('{pain}', (this.data.pain.currentState || 'Your challenge').substring(0, 100));
+                    .replace('{pain}', (this.data.pain.currentState || 'Your challenge').substring(0, 100))
+                    .replace('{monthlyImpact}', monthlyImpact + '/month');
 
                 document.getElementById('followUpSubject').value = subject;
                 document.getElementById('followUpBody').value = body;

@@ -147,6 +147,37 @@
             gap: 10px;
         }
 
+        /* Step Header with Large Icons - Matching DHIET Format */
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .step-header-icon {
+            font-size: 56px;
+            min-width: 70px;
+            text-align: center;
+            opacity: 0.9;
+        }
+
+        .step-header-content h2 {
+            font-size: 26px;
+            font-weight: 800;
+            margin: 0 0 6px 0;
+            color: var(--text);
+        }
+
+        .step-header-content p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin: 0;
+            font-weight: 500;
+        }
+
         /* FORM ELEMENTS */
         .form-group {
             margin-bottom: 18px;
@@ -636,7 +667,13 @@
 
                     <!-- STEP 1: COMPANY BASICS -->
                     <div class="card" id="step-1">
-                        <h2>📋 Company Basics</h2>
+                        <div class="step-header">
+                            <div class="step-header-icon">📋</div>
+                            <div class="step-header-content">
+                                <h2>Company Basics</h2>
+                                <p>Tell us about your organization</p>
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <label>Prospect Name *</label>
@@ -709,12 +746,18 @@
                             </div>
                         </div>
 
-                        <button class="btn btn-primary" class="btn-step-continue" data-action="nextStep">Continue →</button>
+                        <button class="btn btn-primary btn-step-continue" data-action="nextStep">Continue →</button>
                     </div>
 
                     <!-- STEP 2: CURRENT STATE & PAIN POINTS -->
                     <div class="card hidden" id="step-2">
-                        <h2>🎯 Pain Points & Goals</h2>
+                        <div class="step-header">
+                            <div class="step-header-icon">🔍</div>
+                            <div class="step-header-content">
+                                <h2>Current State & Pain</h2>
+                                <p>Where are the biggest manual work bottlenecks?</p>
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <label>Current State (in their words)</label>
@@ -747,14 +790,20 @@
                         </div>
 
                         <div class="flex gap-10">
-                            <button class="btn btn-secondary" class="btn-step-back" data-action="prevStep">← Back</button>
-                            <button class="btn btn-primary" class="btn-step-continue" data-action="nextStep">Continue →</button>
+                            <button class="btn btn-secondary btn-step-back" data-action="prevStep">← Back</button>
+                            <button class="btn btn-primary btn-step-continue" data-action="nextStep">Continue →</button>
                         </div>
                     </div>
 
                     <!-- STEP 3: TECHNOLOGY AUDIT -->
                     <div class="card hidden" id="step-3">
-                        <h2>🔧 Technology Stack</h2>
+                        <div class="step-header">
+                            <div class="step-header-icon">🛠️</div>
+                            <div class="step-header-content">
+                                <h2>Tools & Integration Gaps</h2>
+                                <p>What systems are you using and where's the friction?</p>
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <label>Current Tools (A→Z)</label>
@@ -771,14 +820,20 @@
                         </div>
 
                         <div class="flex gap-10">
-                            <button class="btn btn-secondary" class="btn-step-back" data-action="prevStep">← Back</button>
-                            <button class="btn btn-primary" class="btn-step-continue" data-action="nextStep">Continue →</button>
+                            <button class="btn btn-secondary btn-step-back" data-action="prevStep">← Back</button>
+                            <button class="btn btn-primary btn-step-continue" data-action="nextStep">Continue →</button>
                         </div>
                     </div>
 
                     <!-- STEP 4: DESIRED FUTURE STATE & METRICS -->
                     <div class="card hidden" id="step-4">
-                        <h2>✨ Future Vision & Metrics</h2>
+                        <div class="step-header">
+                            <div class="step-header-icon">💰</div>
+                            <div class="step-header-content">
+                                <h2>ROI & Metrics</h2>
+                                <p>Let's calculate the financial impact of automation</p>
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <label>Desired Future State (what would winning look like?)</label>
@@ -821,14 +876,20 @@
                         </div>
 
                         <div class="flex gap-10">
-                            <button class="btn btn-secondary" class="btn-step-back" data-action="prevStep">← Back</button>
+                            <button class="btn btn-secondary btn-step-back" data-action="prevStep">← Back</button>
                             <button class="btn btn-primary" onclick="app.nextStep()">Generate Recommendations →</button>
                         </div>
                     </div>
 
                     <!-- STEP 5: REVIEW & GENERATE -->
                     <div class="card hidden" id="step-5">
-                        <h2>📊 Review & Generate</h2>
+                        <div class="step-header">
+                            <div class="step-header-icon">✅</div>
+                            <div class="step-header-content">
+                                <h2>Review & Generate</h2>
+                                <p>Ready to create your strategic proposal</p>
+                            </div>
+                        </div>
 
                         <div class="alert alert-info">
                             ✓ All information collected. Ready to generate proposal documents.
@@ -840,7 +901,7 @@
                         </div>
 
                         <div class="flex gap-10">
-                            <button class="btn btn-secondary" class="btn-step-back" data-action="prevStep">← Back</button>
+                            <button class="btn btn-secondary btn-step-back" data-action="prevStep">← Back</button>
                             <button class="btn btn-success" onclick="app.generateProposal()">✓ Generate All Documents</button>
                         </div>
                     </div>

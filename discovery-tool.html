@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Discovery Sales Tool — AI & Automation Consultant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -638,11 +639,11 @@
             <div class="logo">🚀 Discovery Pro</div>
             <div class="nav-right">
                 <a href="index.html" class="nav-btn">← Portfolio</a>
-                <a href="scorecard.html" class="nav-btn" style="background: linear-gradient(135deg, #00d9ff 0%, #8b5cf6 100%); color: white;">📈 AI Scorecard</a>
-                <button class="nav-btn" id="btn-dashboard" data-action="showDashboard">📊 Dashboard</button>
-                <button class="nav-btn" id="btn-crm" data-action="showCRM">📇 CRM</button>
-                <button class="nav-btn" id="btn-followup" data-action="showFollowUpView">✉️ Follow-Ups</button>
-                <button class="nav-btn" id="btn-calendar" data-action="showCalendarView">📅 Calendar</button>
+                <a href="scorecard.html" class="nav-btn" style="background: linear-gradient(135deg, #00d9ff 0%, #8b5cf6 100%); color: white;"><i class="fas fa-chart-line"></i> AI Scorecard</a>
+                <button class="nav-btn" id="btn-dashboard" data-action="showDashboard"><i class="fas fa-chart-bar"></i> Dashboard</button>
+                <button class="nav-btn" id="btn-crm" data-action="showCRM"><i class="fas fa-address-card"></i> CRM</button>
+                <button class="nav-btn" id="btn-followup" data-action="showFollowUpView"><i class="fas fa-envelope"></i> Follow-Ups</button>
+                <button class="nav-btn" id="btn-calendar" data-action="showCalendarView"><i class="fas fa-calendar"></i> Calendar</button>
                 <button class="nav-btn" id="btn-reset" data-action="resetAll" style="color: #ef4444;">↻ Reset</button>
             </div>
         </div>
@@ -667,7 +668,7 @@
                     <!-- STEP 1: COMPANY BASICS -->
                     <div class="card" id="step-1">
                         <div class="step-header">
-                            <div class="step-header-icon">📋</div>
+                            <div class="step-header-icon"><i class="fas fa-clipboard-list"></i></div>
                             <div class="step-header-content">
                                 <h2>Company Basics</h2>
                                 <p>Tell us about your organization</p>
@@ -751,7 +752,7 @@
                     <!-- STEP 2: CURRENT STATE & PAIN POINTS -->
                     <div class="card hidden" id="step-2">
                         <div class="step-header">
-                            <div class="step-header-icon">🔍</div>
+                            <div class="step-header-icon"><i class="fas fa-magnifying-glass"></i></div>
                             <div class="step-header-content">
                                 <h2>Current State & Pain</h2>
                                 <p>Where are the biggest manual work bottlenecks?</p>
@@ -827,7 +828,7 @@
                     <!-- STEP 4: DESIRED FUTURE STATE & METRICS -->
                     <div class="card hidden" id="step-4">
                         <div class="step-header">
-                            <div class="step-header-icon">💰</div>
+                            <div class="step-header-icon"><i class="fas fa-dollar-sign"></i></div>
                             <div class="step-header-content">
                                 <h2>ROI & Metrics</h2>
                                 <p>Let's calculate the financial impact of automation</p>
@@ -910,7 +911,7 @@
                 <div>
                     <!-- QUESTIONS SIDEBAR -->
                     <div class="card">
-                        <h2>💡 Next Questions to Ask</h2>
+                        <h2><i class="fas fa-lightbulb"></i> Next Questions to Ask</h2>
                         <div id="questions-sidebar">
                             <p style="font-size: 13px; line-height: 1.6; color: var(--text-muted);">
                                 Start filling in the company basics on the left. I'll suggest questions to deepen your discovery.
@@ -920,7 +921,7 @@
 
                     <!-- PATTERN DETECTION -->
                     <div class="card">
-                        <h2>🔍 Pattern Detection</h2>
+                        <h2><i class="fas fa-magnifying-glass"></i> Pattern Detection</h2>
                         <div id="patterns-sidebar">
                             <p style="font-size: 13px; color: var(--text-muted);">
                                 As you input pain points, I'll identify patterns and suggest solution clusters.
@@ -930,7 +931,7 @@
 
                     <!-- ROI CALCULATOR -->
                     <div class="card">
-                        <h2>💰 Quick ROI Estimate</h2>
+                        <h2><i class="fas fa-dollar-sign"></i> Quick ROI Estimate</h2>
                         <div id="roi-calculator">
                             <p style="font-size: 13px; color: var(--text-muted);">
                                 Fill in metrics on the left. ROI will calculate automatically.
@@ -941,7 +942,7 @@
                     <!-- PROGRESSIVE SUMMARY -->
                     <div class="card" style="position: sticky; top: 20px;">
                         <h2 style="font-size: 16px; margin-bottom: 15px; color: var(--accent-light);">
-                            📋 Live Summary
+                            <i class="fas fa-clipboard-list"></i> Live Summary
                         </h2>
                         <div id="progressiveSummary">
                             <p style="font-size: 13px; color: var(--text-muted);">
@@ -968,13 +969,13 @@
         <!-- RESULTS / PROPOSAL VIEW -->
         <div id="results-view" class="hidden">
             <div class="card mb-20">
-                <h2>📄 Your Proposal</h2>
+                <h2><i class="fas fa-file-lines"></i> Your Proposal</h2>
                 <div class="flex gap-10" style="margin-bottom: 20px; flex-wrap: wrap;">
-                    <button class="btn btn-primary btn-small" onclick="app.downloadProposalPDF()">📥 Proposal (PDF)</button>
-                    <button class="btn btn-primary btn-small" onclick="app.downloadScopePDF()">📋 SOW (PDF)</button>
-                    <button class="btn btn-primary btn-small" onclick="app.downloadContractPDF()">📜 Contract (PDF)</button>
+                    <button class="btn btn-primary btn-small" onclick="app.downloadProposalPDF()"><i class="fas fa-download"></i> Proposal (PDF)</button>
+                    <button class="btn btn-primary btn-small" onclick="app.downloadScopePDF()"><i class="fas fa-file-pdf"></i> SOW (PDF)</button>
+                    <button class="btn btn-primary btn-small" onclick="app.downloadContractPDF()"><i class="fas fa-scroll"></i> Contract (PDF)</button>
                     <button class="btn btn-secondary btn-small" onclick="app.downloadProposal()">Download TXT</button>
-                    <button class="btn btn-secondary btn-small" onclick="app.showEmailTemplate()">✉️ Email Template</button>
+                    <button class="btn btn-secondary btn-small" onclick="app.showEmailTemplate()"><i class="fas fa-envelope"></i> Email Template</button>
                     <button class="btn btn-secondary btn-small" onclick="app.backToDiscovery()">← Back to Discovery</button>
                 </div>
 
@@ -1002,7 +1003,7 @@
         <div id="dashboard-view" class="hidden">
             <div class="card mb-20">
                 <div class="flex" style="justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h2 style="margin: 0;">📊 Dashboard</h2>
+                    <h2 style="margin: 0;"><i class="fas fa-chart-bar"></i> Dashboard</h2>
                     <button class="btn btn-secondary btn-small" onclick="app.backToDiscovery()">← Back to Discovery</button>
                 </div>
                 <div class="dashboard-grid" id="dashboard-grid">
@@ -1033,9 +1034,9 @@
         <div id="crm-view" class="hidden">
             <div class="card mb-20">
                 <div class="flex" style="justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
-                    <h2 style="margin: 0;">📇 CRM - All Prospects</h2>
+                    <h2 style="margin: 0;"><i class="fas fa-address-card"></i> CRM - All Prospects</h2>
                     <div class="flex gap-10">
-                        <button class="btn btn-primary btn-small" onclick="app.exportCRMToSheets()">📊 Export to CSV</button>
+                        <button class="btn btn-primary btn-small" onclick="app.exportCRMToSheets()"><i class="fas fa-download"></i> Export to CSV</button>
                         <button class="btn btn-secondary btn-small" onclick="app.backToDiscovery()">← Back to Discovery</button>
                     </div>
                 </div>
@@ -1075,7 +1076,7 @@
     <div id="followup-view" class="hidden">
         <div class="container">
             <div class="card mb-20">
-                <h2>✉️ Automated Follow-Up Emails</h2>
+                <h2><i class="fas fa-envelope"></i> Automated Follow-Up Emails</h2>
                 <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
                     Select a template based on where the prospect is in your pipeline.
                 </p>
@@ -1118,7 +1119,7 @@
                         <textarea id="followUpBody" style="width: 100%; min-height: 250px; padding: 12px; background: var(--bg-light); border: 1px solid var(--border); border-radius: 8px; color: var(--text); resize: vertical;"></textarea>
                     </div>
                     <button class="btn btn-primary" onclick="app.copyFollowUpEmail()">
-                        📋 Copy to Clipboard
+                        <i class="fas fa-copy"></i> Copy to Clipboard
                     </button>
                 </div>
             </div>
@@ -1432,7 +1433,7 @@
                 // Update patterns
                 if (this.currentStep === 2 && this.data.pain.category) {
                     const patterns = document.getElementById('patterns-sidebar');
-                    patterns.innerHTML = `<p style="font-size: 13px; line-height: 1.6; padding: 15px; background: rgba(16, 185, 129, 0.1); border-left: 3px solid var(--success); border-radius: 6px;">🔍 Pattern detected: <strong>${this.data.pain.category}</strong> challenge. Common solutions include automation, integration, and process redesign.</p>`;
+                    patterns.innerHTML = `<p style="font-size: 13px; line-height: 1.6; padding: 15px; background: rgba(16, 185, 129, 0.1); border-left: 3px solid var(--success); border-radius: 6px;"><i class="fas fa-magnifying-glass"></i> Pattern detected: <strong>${this.data.pain.category}</strong> challenge. Common solutions include automation, integration, and process redesign.</p>`;
                 }
             },
 
@@ -1618,10 +1619,10 @@
 
             renderDocuments() {
                 const documents = [
-                    { name: 'Proposal Document', desc: 'Full analysis with recommendations', icon: '📄' },
-                    { name: 'Scope of Work', desc: 'Detailed project timeline and deliverables', icon: '📋' },
-                    { name: 'Contract', desc: 'Master service agreement', icon: '📜' },
-                    { name: 'ROI Calculator', desc: 'Specific metrics and payback calculation', icon: '💰' }
+                    { name: 'Proposal Document', desc: 'Full analysis with recommendations', icon: '<i class="fas fa-file-lines"></i>' },
+                    { name: 'Scope of Work', desc: 'Detailed project timeline and deliverables', icon: '<i class="fas fa-clipboard-list"></i>' },
+                    { name: 'Contract', desc: 'Master service agreement', icon: '<i class="fas fa-scroll"></i>' },
+                    { name: 'ROI Calculator', desc: 'Specific metrics and payback calculation', icon: '<i class="fas fa-dollar-sign"></i>' }
                 ];
 
                 const html = documents.map(doc => `
@@ -1825,9 +1826,9 @@ AI Automation Consultant`;
                                 <div style="display: grid; grid-template-columns: auto auto; gap: 15px; margin-bottom: 12px; font-size: 13px;">
                                     <div><strong>Effort:</strong> ${insight.effort}</div>
                                     <div><strong>Impact:</strong> ${insight.impact}</div>
-                                    ${insight.roi ? `<div style="grid-column: 1/-1;"><strong>💰 Potential:</strong> ${insight.roi}</div>` : ''}
-                                    ${insight.savings ? `<div style="grid-column: 1/-1;"><strong>⏰ Savings:</strong> ${insight.savings}</div>` : ''}
-                                    ${insight.timeline ? `<div style="grid-column: 1/-1;"><strong>📅 Timeline:</strong> ${insight.timeline}</div>` : ''}
+                                    ${insight.roi ? `<div style="grid-column: 1/-1;"><strong><i class="fas fa-dollar-sign"></i> Potential:</strong> ${insight.roi}</div>` : ''}
+                                    ${insight.savings ? `<div style="grid-column: 1/-1;"><strong><i class="fas fa-hourglass-end"></i> Savings:</strong> ${insight.savings}</div>` : ''}
+                                    ${insight.timeline ? `<div style="grid-column: 1/-1;"><strong><i class="fas fa-calendar"></i> Timeline:</strong> ${insight.timeline}</div>` : ''}
                                 </div>
                                 <p style="background: rgba(59, 130, 246, 0.1); padding: 12px; border-radius: 6px; font-size: 13px; color: var(--text); margin-bottom: 12px;"><strong>Action Plan:</strong> ${insight.action}</p>
                                 ${insight.callback ? `
@@ -2103,32 +2104,32 @@ Talk soon,
 
                 const html = `
                     <div class="dashboard-card">
-                        <h3>📊 Total Prospects</h3>
+                        <h3><i class="fas fa-chart-bar"></i> Total Prospects</h3>
                         <div class="value">${totalCalls}</div>
                         <div class="subtext">Engaged in discovery</div>
                     </div>
                     <div class="dashboard-card">
-                        <h3>💰 Total Opportunity</h3>
+                        <h3><i class="fas fa-dollar-sign"></i> Total Opportunity</h3>
                         <div class="value">$${(totalValue / 1000000).toFixed(1)}M</div>
                         <div class="subtext">Annual automation savings</div>
                     </div>
                     <div class="dashboard-card">
-                        <h3>🎯 High Priority Leads</h3>
+                        <h3><i class="fas fa-bullseye"></i> High Priority Leads</h3>
                         <div class="value">${highPriorityLeads}</div>
                         <div class="subtext">(>$50k annual savings)</div>
                     </div>
                     <div class="dashboard-card">
-                        <h3>📈 Avg. Automation Potential</h3>
+                        <h3><i class="fas fa-chart-line"></i> Avg. Automation Potential</h3>
                         <div class="value">${avgAutomationPotential}%</div>
                         <div class="subtext">Process automation possible</div>
                     </div>
                     <div class="dashboard-card">
-                        <h3>⚡ Ready-to-Act Leads</h3>
+                        <h3><i class="fas fa-bolt"></i> Ready-to-Act Leads</h3>
                         <div class="value">${highReadinessLeads}</div>
                         <div class="subtext">(AI Readiness >70)</div>
                     </div>
                     <div class="dashboard-card">
-                        <h3>📄 Conversion Rate</h3>
+                        <h3><i class="fas fa-percent"></i> Conversion Rate</h3>
                         <div class="value">${conversionRate}%</div>
                         <div class="subtext">Proposals sent</div>
                     </div>
@@ -2778,7 +2779,7 @@ END:VCALENDAR`;
                         const scorecardBanner = document.createElement('div');
                         scorecardBanner.style.cssText = 'background: linear-gradient(135deg, #00d9ff 0%, #0066cc 100%); color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: center;';
                         scorecardBanner.innerHTML = `
-                            <div style="font-weight: 600; margin-bottom: 10px;">📊 Your AI Readiness Scores</div>
+                            <div style="font-weight: 600; margin-bottom: 10px;"><i class="fas fa-chart-bar"></i> Your AI Readiness Scores</div>
                             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; font-size: 14px;">
                                 <div><strong>AI Readiness:</strong> ${scores.aiReadiness}%</div>
                                 <div><strong>Manual Processes:</strong> ${scores.manualProcesses}%</div>

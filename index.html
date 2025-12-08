@@ -1089,6 +1089,14 @@
         <div class="session-timer">
             <div class="timer-label">Session Time</div>
             <div class="timer-display" id="sessionTimer">00:00:00</div>
+            <div class="timer-controls">
+                <button class="timer-btn timer-start" id="timerStartBtn" onclick="startTimer()">
+                    <i class="fas fa-play"></i> START
+                </button>
+                <button class="timer-btn timer-stop" id="timerStopBtn" onclick="stopTimer()" style="display: none;">
+                    <i class="fas fa-pause"></i> STOP
+                </button>
+            </div>
         </div>
 
         <!-- Timeline -->
@@ -1509,6 +1517,43 @@
             }
         });
 
+        // Timer State
+        let timerState = { isRunning: false, startTime: null, elapsedTime: 0, intervalId: null };
+
+        function startTimer() {
+            if (timerState.isRunning) return;
+            timerState.isRunning = true;
+            timerState.startTime = Date.now() - timerState.elapsedTime;
+            document.getElementById('timerStartBtn').style.display = 'none';
+            document.getElementById('timerStopBtn').style.display = 'flex';
+            timerState.intervalId = setInterval(updateTimerDisplay, 100);
+            addTimelineEvent('Timer started');
+        }
+
+        function stopTimer() {
+            if (!timerState.isRunning) return;
+            timerState.isRunning = false;
+            timerState.elapsedTime = Date.now() - timerState.startTime;
+            document.getElementById('timerStartBtn').style.display = 'flex';
+            document.getElementById('timerStopBtn').style.display = 'none';
+            clearInterval(timerState.intervalId);
+            timerState.intervalId = null;
+            addTimelineEvent('Timer paused at ' + formatTime(timerState.elapsedTime));
+        }
+
+        function updateTimerDisplay() {
+            const elapsed = timerState.isRunning ? Date.now() - timerState.startTime : timerState.elapsedTime;
+            document.getElementById('sessionTimer').textContent = formatTime(elapsed);
+        }
+
+        function formatTime(milliseconds) {
+            const totalSeconds = Math.floor(milliseconds / 1000);
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
         // Initialize
         loadTheme();
 
@@ -1519,6 +1564,27 @@
             second: '2-digit'
         });
         document.getElementById('pageLoadTime').textContent = loadTime;
+
+        // Auto-start timer after page load
+        setTimeout(function() { startTimer(); }, 500);
+
+        // Persist timer state on page unload
+        window.addEventListener('beforeunload', function() {
+            if (timerState.isRunning) {
+                localStorage.setItem('timerElapsedTime', timerState.elapsedTime + (Date.now() - timerState.startTime));
+            } else {
+                localStorage.setItem('timerElapsedTime', timerState.elapsedTime);
+            }
+        });
+
+        // Restore timer state on page load
+        window.addEventListener('load', function() {
+            const savedElapsed = parseInt(localStorage.getItem('timerElapsedTime')) || 0;
+            if (savedElapsed > 0) {
+                timerState.elapsedTime = savedElapsed;
+                updateTimerDisplay();
+            }
+        });
     </script>
 </body>
 </html>

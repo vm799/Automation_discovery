@@ -628,100 +628,6 @@
             }
         }
 
-        /* TIMER PANEL - PERSISTENT SIDE PANEL */
-        .timer-panel {
-            position: fixed;
-            right: 20px;
-            top: 120px;
-            width: 280px;
-            background: var(--secondary);
-            border: 2px solid var(--accent);
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 10px 40px rgba(59, 130, 246, 0.3);
-            z-index: 500;
-            animation: slideInRight 0.4s ease;
-        }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(100px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .timer-panel h3 {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--accent-light);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .timer-display {
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--accent);
-            text-align: center;
-            margin: 15px 0;
-            font-family: 'Courier New', monospace;
-            letter-spacing: 2px;
-        }
-
-        .timer-controls {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .timer-btn {
-            padding: 10px 12px;
-            border: 1px solid var(--border);
-            background: var(--bg-light);
-            color: var(--text);
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .timer-btn:hover {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: white;
-        }
-
-        .timer-btn.active {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: white;
-        }
-
-        .timer-stats {
-            font-size: 12px;
-            color: var(--text-muted);
-            line-height: 1.6;
-        }
-
-        .timer-stats div {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .timer-stats div:last-child {
-            border-bottom: none;
-        }
-
         /* PHONE FIELD - ENLARGED */
         input[type="tel"] {
             padding: 16px 14px !important;
@@ -804,12 +710,508 @@
                 margin-bottom: 20px;
             }
         }
+
+        /* ===================================
+           UNIFIED SIDEBAR STYLES
+           =================================== */
+
+        :root {
+            --sidebar-width: 320px;
+            --transition-speed: 0.3s;
+            --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --neon-cyan: #00d9ff;
+            --neon-pink: #ff006e;
+            --neon-purple: #8b5cf6;
+        }
+
+        [data-theme="dark"] {
+            --bg-secondary: #151921;
+            --bg-tertiary: #1e242e;
+            --bg-highlight: #2a3341;
+            --text-primary: #f0f6fc;
+            --text-secondary: #d1dae6;
+            --text-tertiary: #b8c5d3;
+            --text-muted: #a0aec0;
+            --accent-primary: #00d9ff;
+            --accent-hover: #33e1ff;
+            --border-color: #2d3947;
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 217, 255, 0.1);
+        }
+
+        body {
+            padding-left: var(--sidebar-width);
+            transition: padding var(--transition-smooth);
+        }
+
+        /* SIDEBAR CONTAINER */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            padding: 32px 24px;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition-smooth);
+        }
+
+        [data-theme="dark"] .sidebar {
+            border-right: 1px solid rgba(0, 217, 255, 0.2);
+            box-shadow: var(--shadow-md), 0 0 40px rgba(0, 217, 255, 0.05);
+        }
+
+        .sidebar-brand {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-primary);
+            margin-bottom: 32px;
+            letter-spacing: -0.5px;
+        }
+
+        /* THEME TOGGLE */
+        .sidebar-controls {
+            margin-bottom: 32px;
+        }
+
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all var(--transition-smooth);
+            margin-bottom: 16px;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-highlight);
+            transform: translateX(4px);
+        }
+
+        [data-theme="dark"] .theme-toggle:hover {
+            border-color: rgba(0, 217, 255, 0.4);
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.1);
+        }
+
+        .theme-toggle-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .theme-toggle-switch {
+            width: 48px;
+            height: 24px;
+            background: var(--border-color);
+            border-radius: 12px;
+            position: relative;
+            transition: background var(--transition-speed);
+        }
+
+        [data-theme="dark"] .theme-toggle-switch {
+            background: var(--accent-primary);
+        }
+
+        .theme-toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform var(--transition-speed);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        [data-theme="dark"] .theme-toggle-switch::after {
+            transform: translateX(24px);
+        }
+
+        /* SESSION TIMER */
+        .session-timer {
+            padding: 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 32px;
+            transition: all var(--transition-smooth);
+        }
+
+        [data-theme="dark"] .session-timer {
+            background: rgba(0, 217, 255, 0.03);
+            border-color: rgba(0, 217, 255, 0.2);
+        }
+
+        [data-theme="dark"] .session-timer:hover {
+            background: rgba(0, 217, 255, 0.05);
+            border-color: rgba(0, 217, 255, 0.4);
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.15);
+        }
+
+        .timer-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-tertiary);
+            margin-bottom: 8px;
+        }
+
+        .timer-display {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--accent-primary);
+            text-align: center;
+            letter-spacing: 1px;
+            transition: all var(--transition-smooth);
+            margin-bottom: 12px;
+        }
+
+        [data-theme="dark"] .timer-display {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 10px rgba(0, 217, 255, 0.5), 0 0 20px rgba(0, 217, 255, 0.3);
+        }
+
+        .session-timer:hover .timer-display {
+            transform: scale(1.05);
+        }
+
+        [data-theme="dark"] .session-timer:hover .timer-display {
+            text-shadow: 0 0 15px rgba(0, 217, 255, 0.8), 0 0 30px rgba(0, 217, 255, 0.5);
+        }
+
+        /* TIMER CONTROLS */
+        .timer-controls {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .timer-btn {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .timer-start {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+        }
+
+        .timer-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.5);
+        }
+
+        .timer-stop {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+        }
+
+        .timer-stop:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.5);
+        }
+
+        .timer-btn:active {
+            transform: translateY(0);
+        }
+
+        /* TIMELINE */
+        .timeline {
+            margin-top: 24px;
+        }
+
+        .timeline-header {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-tertiary);
+            margin-bottom: 16px;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 24px;
+            padding-bottom: 20px;
+            border-left: 2px solid var(--border-color);
+        }
+
+        .timeline-item:last-child {
+            border-left-color: transparent;
+            padding-bottom: 0;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 0;
+            width: 10px;
+            height: 10px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            box-shadow: 0 0 0 3px var(--bg-secondary);
+            transition: all var(--transition-smooth);
+        }
+
+        [data-theme="dark"] .timeline-item::before {
+            background: var(--neon-cyan);
+            box-shadow: 0 0 0 3px var(--bg-secondary), 0 0 10px rgba(0, 217, 255, 0.5);
+        }
+
+        .timeline-item.active::before {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.3);
+                opacity: 0.7;
+            }
+        }
+
+        [data-theme="dark"] .timeline-item.active::before {
+            animation: pulseDark 2s infinite;
+        }
+
+        @keyframes pulseDark {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+                box-shadow: 0 0 0 3px var(--bg-secondary), 0 0 10px rgba(0, 217, 255, 0.6);
+            }
+            50% {
+                transform: scale(1.3);
+                opacity: 0.7;
+                box-shadow: 0 0 0 3px var(--bg-secondary), 0 0 20px rgba(0, 217, 255, 0.8);
+            }
+        }
+
+        .timeline-time {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .timeline-content {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* NAVIGATION */
+        .sidebar-nav {
+            margin-top: 32px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all var(--transition-smooth);
+            margin-bottom: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: var(--accent-primary);
+            transform: scaleY(0);
+            transition: transform var(--transition-smooth);
+        }
+
+        .nav-item:hover {
+            background: var(--bg-highlight);
+            color: var(--accent-primary);
+            transform: translateX(6px);
+        }
+
+        .nav-item:hover::before {
+            transform: scaleY(1);
+        }
+
+        [data-theme="dark"] .nav-item:hover {
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.15);
+            background: rgba(0, 217, 255, 0.05);
+        }
+
+        .nav-item i {
+            margin-right: 12px;
+            width: 16px;
+        }
+
+        /* MOBILE MENU TOGGLE */
+        .mobile-menu-toggle {
+            display: none;
+        }
+
+        /* MOBILE RESPONSIVE */
+        @media (max-width: 1200px) {
+            body {
+                padding-left: 0;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                width: 48px;
+                height: 48px;
+                background: var(--accent-primary);
+                color: white;
+                border: none;
+                border-radius: 10px;
+                cursor: pointer;
+                z-index: 1001;
+                box-shadow: var(--shadow-md);
+                font-size: 18px;
+            }
+
+            .mobile-menu-toggle:hover {
+                background: var(--accent-hover);
+                transform: scale(1.05);
+            }
+        }
+
+        /* Scrollbar Styling for Sidebar */
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: var(--bg-tertiary);
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-primary);
+        }
     </style>
 
     <!-- jsPDF for PDF Generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
-<body>
+<body style="padding-left: 320px;">
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" onclick="toggleMobileSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- UNIFIED SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">VM</div>
+
+        <div class="sidebar-controls">
+            <div class="theme-toggle" onclick="toggleTheme()">
+                <span class="theme-toggle-label">Dark Mode</span>
+                <div class="theme-toggle-switch"></div>
+            </div>
+        </div>
+
+        <!-- Session Timer with START/STOP Controls -->
+        <div class="session-timer">
+            <div class="timer-label">Session Time</div>
+            <div class="timer-display" id="sessionTimer">00:00:00</div>
+            <div class="timer-controls">
+                <button class="timer-btn timer-start" id="timerStartBtn" onclick="startTimer()">
+                    <i class="fas fa-play"></i> START
+                </button>
+                <button class="timer-btn timer-stop" id="timerStopBtn" onclick="stopTimer()" style="display: none;">
+                    <i class="fas fa-pause"></i> STOP
+                </button>
+            </div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="timeline">
+            <div class="timeline-header">Your Journey</div>
+            <div id="timelineContainer">
+                <div class="timeline-item active">
+                    <div class="timeline-time" id="pageLoadTime">Just now</div>
+                    <div class="timeline-content">Page loaded</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="sidebar-nav">
+            <a href="discovery-tool.html" class="nav-item" style="background: linear-gradient(135deg, #00d9ff 0%, #8b5cf6 100%); color: white;">
+                <i class="fas fa-rocket"></i>
+                <span>Discovery Tool</span>
+            </a>
+            <a href="scorecard.html" class="nav-item">
+                <i class="fas fa-chart-line"></i>
+                <span>AI Readiness Score</span>
+            </a>
+            <a href="index.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="index.html#expertise" class="nav-item">
+                <i class="fas fa-briefcase"></i>
+                <span>Expertise</span>
+            </a>
+            <a href="index.html#background" class="nav-item">
+                <i class="fas fa-book"></i>
+                <span>Background</span>
+            </a>
+        </nav>
+    </aside>
+
     <!-- HEADER -->
     <header>
         <div class="header-content">
@@ -1140,21 +1542,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- PERSISTENT TIMER PANEL -->
-        <div class="timer-panel" id="timer-panel">
-            <h3><i class="fas fa-stopwatch"></i> Call Timer</h3>
-            <div class="timer-display" id="timer-display">00:00</div>
-            <div class="timer-controls">
-                <button class="timer-btn" id="timer-start"><i class="fas fa-play"></i> Start</button>
-                <button class="timer-btn" id="timer-stop"><i class="fas fa-pause"></i> Stop</button>
-            </div>
-            <button style="width: 100%; padding: 8px; margin-bottom: 15px; background: var(--bg-light); color: var(--text); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-size: 12px;" id="timer-reset"><i class="fas fa-redo"></i> Reset</button>
-            <div class="timer-stats">
-                <div><span>Minutes:</span> <span id="timer-minutes">0</span></div>
-                <div><span>Seconds:</span> <span id="timer-seconds">0</span></div>
             </div>
         </div>
 
@@ -2941,57 +3328,6 @@ END:VCALENDAR`;
                 document.getElementById('followup-view').classList.add('hidden');
                 document.getElementById('calendar-view').classList.remove('hidden');
             },
-
-            // TIMER FUNCTIONALITY
-            timerInterval: null,
-            timerSeconds: 0,
-            initTimer() {
-                const startBtn = document.getElementById('timer-start');
-                const stopBtn = document.getElementById('timer-stop');
-                const resetBtn = document.getElementById('timer-reset');
-
-                startBtn.addEventListener('click', () => this.startTimer());
-                stopBtn.addEventListener('click', () => this.stopTimer());
-                resetBtn.addEventListener('click', () => this.resetTimer());
-            },
-            startTimer() {
-                if (this.timerInterval) return;
-
-                document.getElementById('timer-start').classList.add('active');
-                document.getElementById('timer-stop').classList.remove('active');
-
-                this.timerInterval = setInterval(() => {
-                    this.timerSeconds++;
-                    this.updateTimerDisplay();
-                }, 1000);
-            },
-            stopTimer() {
-                if (!this.timerInterval) return;
-
-                clearInterval(this.timerInterval);
-                this.timerInterval = null;
-
-                document.getElementById('timer-start').classList.remove('active');
-                document.getElementById('timer-stop').classList.add('active');
-            },
-            resetTimer() {
-                clearInterval(this.timerInterval);
-                this.timerInterval = null;
-                this.timerSeconds = 0;
-                this.updateTimerDisplay();
-
-                document.getElementById('timer-start').classList.remove('active');
-                document.getElementById('timer-stop').classList.remove('active');
-            },
-            updateTimerDisplay() {
-                const minutes = Math.floor(this.timerSeconds / 60);
-                const seconds = this.timerSeconds % 60;
-
-                const displayStr = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-                document.getElementById('timer-display').textContent = displayStr;
-                document.getElementById('timer-minutes').textContent = minutes;
-                document.getElementById('timer-seconds').textContent = seconds;
-            }
         };
 
         // Properly initialize window.app with the real app object
@@ -3011,7 +3347,6 @@ END:VCALENDAR`;
         // INITIALIZE
         window.addEventListener('load', () => {
             app.loadCRM();
-            app.initTimer();
 
             // Load scorecard data if coming from scorecard assessment
             const params = new URLSearchParams(window.location.search);
@@ -3085,6 +3420,110 @@ END:VCALENDAR`;
         document.addEventListener('change', (e) => {
             app.updateProgressiveSummary(); // Update summary on any change
         });
+
+        // ===================================
+        // UNIFIED SIDEBAR JAVASCRIPT
+        // ===================================
+
+        let timerState = { isRunning: false, startTime: null, elapsedTime: 0, intervalId: null };
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            addTimelineEvent('Theme switched to ' + newTheme + ' mode');
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+
+        function startTimer() {
+            if (timerState.isRunning) return;
+            timerState.isRunning = true;
+            timerState.startTime = Date.now() - timerState.elapsedTime;
+            document.getElementById('timerStartBtn').style.display = 'none';
+            document.getElementById('timerStopBtn').style.display = 'flex';
+            timerState.intervalId = setInterval(updateTimerDisplay, 100);
+            addTimelineEvent('Timer started');
+        }
+
+        function stopTimer() {
+            if (!timerState.isRunning) return;
+            timerState.isRunning = false;
+            timerState.elapsedTime = Date.now() - timerState.startTime;
+            document.getElementById('timerStartBtn').style.display = 'flex';
+            document.getElementById('timerStopBtn').style.display = 'none';
+            clearInterval(timerState.intervalId);
+            timerState.intervalId = null;
+            addTimelineEvent('Timer paused at ' + formatTime(timerState.elapsedTime));
+        }
+
+        function updateTimerDisplay() {
+            const elapsed = timerState.isRunning ? Date.now() - timerState.startTime : timerState.elapsedTime;
+            document.getElementById('sessionTimer').textContent = formatTime(elapsed);
+        }
+
+        function formatTime(milliseconds) {
+            const totalSeconds = Math.floor(milliseconds / 1000);
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        function addTimelineEvent(content) {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const container = document.getElementById('timelineContainer');
+            container.querySelectorAll('.timeline-item').forEach(item => item.classList.remove('active'));
+            const eventHTML = `<div class="timeline-item active"><div class="timeline-time">${timeString}</div><div class="timeline-content">${content}</div></div>`;
+            container.insertAdjacentHTML('afterbegin', eventHTML);
+            const items = container.querySelectorAll('.timeline-item');
+            if (items.length > 10) items[items.length - 1].remove();
+        }
+
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('mobile-open');
+            addTimelineEvent('Toggled sidebar menu');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    if (window.innerWidth <= 1200) {
+                        document.getElementById('sidebar').classList.remove('mobile-open');
+                    }
+                });
+            });
+
+            const loadTime = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            document.getElementById('pageLoadTime').textContent = loadTime;
+            setTimeout(function() { startTimer(); }, 500);
+        });
+
+        window.addEventListener('beforeunload', function() {
+            if (timerState.isRunning) {
+                localStorage.setItem('timerElapsedTime', timerState.elapsedTime + (Date.now() - timerState.startTime));
+            } else {
+                localStorage.setItem('timerElapsedTime', timerState.elapsedTime);
+            }
+        });
+
+        window.addEventListener('load', function() {
+            const savedElapsed = parseInt(localStorage.getItem('timerElapsedTime')) || 0;
+            if (savedElapsed > 0) {
+                timerState.elapsedTime = savedElapsed;
+                updateTimerDisplay();
+            }
+        });
+
+        // Load theme on page load
+        loadTheme();
     </script>
 </body>
 </html>

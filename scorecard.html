@@ -776,6 +776,17 @@
             box-shadow: 0 4px 12px rgba(239, 68, 68, 0.5);
         }
 
+        .timer-reset {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+        }
+
+        .timer-reset:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.5);
+        }
+
         .timer-btn:active {
             transform: translateY(0);
         }
@@ -1008,6 +1019,9 @@
                 </button>
                 <button class="timer-btn timer-stop" id="timerStopBtn" onclick="stopTimer()" style="display: none;">
                     <i class="fas fa-pause"></i> STOP
+                </button>
+                <button class="timer-btn timer-reset" id="timerResetBtn" onclick="resetTimer()">
+                    <i class="fas fa-redo"></i> RESET
                 </button>
             </div>
         </div>
@@ -1676,6 +1690,19 @@
             clearInterval(timerState.intervalId);
             timerState.intervalId = null;
             addTimelineEvent('Timer paused at ' + formatTime(timerState.elapsedTime));
+        }
+
+        function resetTimer() {
+            timerState.isRunning = false;
+            timerState.elapsedTime = 0;
+            timerState.startTime = null;
+            clearInterval(timerState.intervalId);
+            timerState.intervalId = null;
+            document.getElementById('timerStartBtn').style.display = 'flex';
+            document.getElementById('timerStopBtn').style.display = 'none';
+            document.getElementById('sessionTimer').textContent = '00:00:00';
+            localStorage.removeItem('timerElapsedTime');
+            addTimelineEvent('Timer reset');
         }
 
         function updateTimerDisplay() {

@@ -1634,16 +1634,26 @@
         // Initialize
         loadTheme();
 
-        // Set initial page load time
-        const loadTime = new Date().toLocaleTimeString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-        });
-        document.getElementById('pageLoadTime').textContent = loadTime;
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    if (window.innerWidth <= 1200) {
+                        document.getElementById('sidebar').classList.remove('mobile-open');
+                    }
+                });
+            });
 
-        // Auto-start timer after page load
-        setTimeout(function() { startTimer(); }, 500);
+            // Set initial page load time
+            const loadTime = new Date().toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('pageLoadTime').textContent = loadTime;
+
+            // Auto-start timer after page load
+            setTimeout(function() { startTimer(); }, 500);
+        });
 
         // Persist timer state on page unload
         window.addEventListener('beforeunload', function() {

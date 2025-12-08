@@ -627,6 +627,183 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* TIMER PANEL - PERSISTENT SIDE PANEL */
+        .timer-panel {
+            position: fixed;
+            right: 20px;
+            top: 120px;
+            width: 280px;
+            background: var(--secondary);
+            border: 2px solid var(--accent);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(59, 130, 246, 0.3);
+            z-index: 500;
+            animation: slideInRight 0.4s ease;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .timer-panel h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent-light);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .timer-display {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--accent);
+            text-align: center;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+        }
+
+        .timer-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .timer-btn {
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            background: var(--bg-light);
+            color: var(--text);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .timer-btn:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        .timer-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        .timer-stats {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .timer-stats div {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .timer-stats div:last-child {
+            border-bottom: none;
+        }
+
+        /* PHONE FIELD - ENLARGED */
+        input[type="tel"] {
+            padding: 16px 14px !important;
+            font-size: 16px !important;
+            height: 50px !important;
+            font-weight: 500;
+            border: 2px solid var(--border) !important;
+        }
+
+        input[type="tel"]:focus {
+            border-color: var(--accent) !important;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.3) !important;
+        }
+
+        /* HOME/BACK NAVIGATION BUTTONS */
+        .nav-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: linear-gradient(135deg, #00d9ff 0%, #3b82f6 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .nav-home:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .nav-home i {
+            font-size: 14px;
+        }
+
+        /* AI READINESS SCORECARD - DARK MODE STYLING */
+        .scorecard-banner {
+            background: var(--secondary) !important;
+            border: 2px solid var(--accent) !important;
+            color: var(--text) !important;
+        }
+
+        .scorecard-banner div:first-child {
+            color: var(--accent-light) !important;
+        }
+
+        .scorecard-banner strong {
+            color: var(--text) !important;
+        }
+
+        .scorecard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .scorecard-item {
+            background: var(--bg-light);
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .scorecard-item strong {
+            color: var(--accent-light);
+        }
+
+        @media (max-width: 1024px) {
+            .timer-panel {
+                position: relative;
+                right: auto;
+                top: auto;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+        }
     </style>
 
     <!-- jsPDF for PDF Generation -->
@@ -966,6 +1143,21 @@
             </div>
         </div>
 
+        <!-- PERSISTENT TIMER PANEL -->
+        <div class="timer-panel" id="timer-panel">
+            <h3><i class="fas fa-stopwatch"></i> Call Timer</h3>
+            <div class="timer-display" id="timer-display">00:00</div>
+            <div class="timer-controls">
+                <button class="timer-btn" id="timer-start"><i class="fas fa-play"></i> Start</button>
+                <button class="timer-btn" id="timer-stop"><i class="fas fa-pause"></i> Stop</button>
+            </div>
+            <button style="width: 100%; padding: 8px; margin-bottom: 15px; background: var(--bg-light); color: var(--text); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-size: 12px;" id="timer-reset"><i class="fas fa-redo"></i> Reset</button>
+            <div class="timer-stats">
+                <div><span>Minutes:</span> <span id="timer-minutes">0</span></div>
+                <div><span>Seconds:</span> <span id="timer-seconds">0</span></div>
+            </div>
+        </div>
+
         <!-- RESULTS / PROPOSAL VIEW -->
         <div id="results-view" class="hidden">
             <div class="card mb-20">
@@ -977,6 +1169,7 @@
                     <button class="btn btn-secondary btn-small" onclick="app.downloadProposal()">Download TXT</button>
                     <button class="btn btn-secondary btn-small" onclick="app.showEmailTemplate()"><i class="fas fa-envelope"></i> Email Template</button>
                     <button class="btn btn-secondary btn-small" onclick="app.backToDiscovery()">← Back to Discovery</button>
+                    <a href="index.html" class="nav-home"><i class="fas fa-home"></i> Home</a>
                 </div>
 
                 <div class="alert alert-success">
@@ -2747,6 +2940,57 @@ END:VCALENDAR`;
                 document.getElementById('crm-view').classList.add('hidden');
                 document.getElementById('followup-view').classList.add('hidden');
                 document.getElementById('calendar-view').classList.remove('hidden');
+            },
+
+            // TIMER FUNCTIONALITY
+            timerInterval: null,
+            timerSeconds: 0,
+            initTimer() {
+                const startBtn = document.getElementById('timer-start');
+                const stopBtn = document.getElementById('timer-stop');
+                const resetBtn = document.getElementById('timer-reset');
+
+                startBtn.addEventListener('click', () => this.startTimer());
+                stopBtn.addEventListener('click', () => this.stopTimer());
+                resetBtn.addEventListener('click', () => this.resetTimer());
+            },
+            startTimer() {
+                if (this.timerInterval) return;
+
+                document.getElementById('timer-start').classList.add('active');
+                document.getElementById('timer-stop').classList.remove('active');
+
+                this.timerInterval = setInterval(() => {
+                    this.timerSeconds++;
+                    this.updateTimerDisplay();
+                }, 1000);
+            },
+            stopTimer() {
+                if (!this.timerInterval) return;
+
+                clearInterval(this.timerInterval);
+                this.timerInterval = null;
+
+                document.getElementById('timer-start').classList.remove('active');
+                document.getElementById('timer-stop').classList.add('active');
+            },
+            resetTimer() {
+                clearInterval(this.timerInterval);
+                this.timerInterval = null;
+                this.timerSeconds = 0;
+                this.updateTimerDisplay();
+
+                document.getElementById('timer-start').classList.remove('active');
+                document.getElementById('timer-stop').classList.remove('active');
+            },
+            updateTimerDisplay() {
+                const minutes = Math.floor(this.timerSeconds / 60);
+                const seconds = this.timerSeconds % 60;
+
+                const displayStr = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                document.getElementById('timer-display').textContent = displayStr;
+                document.getElementById('timer-minutes').textContent = minutes;
+                document.getElementById('timer-seconds').textContent = seconds;
             }
         };
 
@@ -2767,6 +3011,7 @@ END:VCALENDAR`;
         // INITIALIZE
         window.addEventListener('load', () => {
             app.loadCRM();
+            app.initTimer();
 
             // Load scorecard data if coming from scorecard assessment
             const params = new URLSearchParams(window.location.search);
@@ -2777,13 +3022,14 @@ END:VCALENDAR`;
                         const scores = JSON.parse(assessmentResults);
                         // Display scorecard context
                         const scorecardBanner = document.createElement('div');
-                        scorecardBanner.style.cssText = 'background: linear-gradient(135deg, #00d9ff 0%, #0066cc 100%); color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: center;';
+                        scorecardBanner.className = 'scorecard-banner';
+                        scorecardBanner.style.cssText = 'padding: 20px; border-radius: 8px; margin-bottom: 20px;';
                         scorecardBanner.innerHTML = `
-                            <div style="font-weight: 600; margin-bottom: 10px;"><i class="fas fa-chart-bar"></i> Your AI Readiness Scores</div>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; font-size: 14px;">
-                                <div><strong>AI Readiness:</strong> ${scores.aiReadiness}%</div>
-                                <div><strong>Manual Processes:</strong> ${scores.manualProcesses}%</div>
-                                <div><strong>Automation Upside:</strong> ${scores.automationUpside}%</div>
+                            <div style="font-weight: 600; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; font-size: 16px;"><i class="fas fa-chart-bar"></i> Your AI Readiness Scores</div>
+                            <div class="scorecard-grid">
+                                <div class="scorecard-item"><strong>AI Readiness:</strong> <span style="color: #60a5fa; font-weight: 600;">${scores.aiReadiness}%</span></div>
+                                <div class="scorecard-item"><strong>Manual Processes:</strong> <span style="color: #60a5fa; font-weight: 600;">${scores.manualProcesses}%</span></div>
+                                <div class="scorecard-item"><strong>Automation Upside:</strong> <span style="color: #60a5fa; font-weight: 600;">${scores.automationUpside}%</span></div>
                             </div>
                         `;
                         const discoveryFlow = document.getElementById('discovery-flow');
